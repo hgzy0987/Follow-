@@ -42,13 +42,74 @@ button{width:100%;padding:14px;border:none;border-radius:12px;font-size:16px;fon
 .signin-link a{color:#4CAF50;text-decoration:none;margin-left:5px;font-size:13px;}
 
 /* Mobile-style popup modal */
-.modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);display:flex;justify-content:center;align-items:center;z-index:999;display:none;}
-.modal-content{background:#1a1a1a;padding:25px 20px;border-radius:15px;max-width:350px;width:90%;position:relative;text-align:center;}
-.modal-content img{width:80px;margin-bottom:15px;}
-.modal-content h3{margin-bottom:12px;color:#fff;font-size:16px;font-weight:500;}
-.modal-content p{color:#bbb;font-size:14px;margin-bottom:15px;line-height:1.5;}
-.modal-content .close-btn{position:absolute;top:10px;right:10px;background:#e53935;color:#fff;border:none;width:28px;height:28px;border-radius:50%;cursor:pointer;font-weight:bold;font-size:16px;line-height:28px;}
-@media screen and (max-width:450px){.container{max-width:100%;padding:15px;}.banner{height:150px;}}
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.7);
+    display: none; /* প্রথমে hide */
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+.modal-content {
+    background: #1a1a1a;
+    padding: 25px 20px;
+    border-radius: 15px;
+    max-width: 350px;
+    width: 90%;
+    position: relative;
+    text-align: center;
+}
+
+.modal-content img {
+    width: 100%;           /* container অনুযায়ী ফিট হবে */
+    max-width: 200px;      /* বড় স্ক্রিনে বেশি বড় হবে না */
+    height: auto;          /* প্রোপোরশন ঠিক থাকবে */
+    margin-bottom: 15px;
+    border-radius: 12px;   /* সুন্দর rounded look */
+    object-fit: cover;     /* ইমেজ crop হলে সুন্দরভাবে ফিট হবে */
+}
+
+.modal-content h3 {
+    margin-bottom: 12px;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.modal-content p {
+    color: #bbb;
+    font-size: 14px;
+    margin-bottom: 15px;
+    line-height: 1.5;
+}
+
+.modal-content .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #e53935;
+    color: #fff;
+    border: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 28px;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 450px){
+    .container { max-width: 100%; padding: 15px; }
+    .banner { height: 150px; }
+    .modal-content img { max-width: 150px; margin-bottom: 12px; }
+}
 </style>
 </head>
 <body>
