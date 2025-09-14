@@ -8,7 +8,8 @@
   <!-- Google Fonts & Icons -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
-
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0000ff">
   <style>
     * {
       margin: 0;
@@ -734,6 +735,71 @@
       sidebar.classList.remove('active');
     });
   </script>
+<!-- PWA Install Popup (Show on Page Load) -->
+<div id="pwaInstallPopup" style="
+    position: fixed;
+    bottom: -120px;
+    left: 0;
+    right: 0;
+    background: #fff;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    box-shadow: 0 -4px 12px rgba(0,0,0,0.3);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    transition: bottom 0.5s ease-in-out;
+    z-index: 9999;
+">
+  <div style="display:flex; align-items:center;">
+    <img src="https://i.postimg.cc/BQ33NCQX/Gemini-Generated-Image-14xk2z14xk2z14xk.png" alt="App Logo" style="width:50px; height:50px; border-radius:10px; margin-right:12px;">
+    <span style="font-weight:500; font-size:16px;">Install <strong>Followstar App </strong> on your device</span>
+  </div>
+  <button id="pwaInstallBtn" style="
+    background:#007bff; color:#fff; border:none; padding:10px 18px; border-radius:8px; font-weight:bold; cursor:pointer;
+  ">Download Now</button>
+</div>
 
+<script>
+(function(){
+  const popup = document.getElementById('pwaInstallPopup');
+  const installBtn = document.getElementById('pwaInstallBtn');
+
+  let deferredPrompt;
+
+  // Register Service Worker
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('service-worker.js')
+      .then(() => console.log('Service Worker Registered'))
+      .catch(err => console.log('SW registration failed:', err));
+  }
+
+  // Show popup immediately on page load
+  window.addEventListener('load', () => {
+    popup.style.bottom = '0';
+  });
+
+  // Listen for beforeinstallprompt to enable PWA install
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+  });
+
+  // Install button click
+  installBtn.addEventListener('click', async () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const choice = await deferredPrompt.userChoice;
+      console.log(choice.outcome === 'accepted' ? 'PWA installed' : 'PWA dismissed');
+      deferredPrompt = null;
+    }
+    popup.style.bottom = '-120px';
+  });
+
+  // Auto hide after 30s
+  setTimeout(()=>{ popup.style.bottom = '-120px'; }, 30000);
+})();
+</script>
 </body>
 </html>
