@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FollowStar Premium Menu</title>
+
+  <!-- Google Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: #f5f5f5;
+      overflow-x: hidden;
+    }
+
+    /* Fixed Header */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 60px;
+      background: linear-gradient(90deg, #4facfe, #00f2fe);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      z-index: 1000;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    header .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #fff;
+      z-index: 1100;
+    }
+
+    header .logo img {
+      height: 40px;
+      width: 40px;
+      border-radius: 10px;
+      border: 2px solid #fff;
+    }
+
+    header .logo span {
+      font-size: 1.3rem;
+      font-weight: 700;
+    }
+
+    header .menu-icon {
+      font-family: 'Material Icons';
+      font-size: 32px;
+      cursor: pointer;
+      color: #fff;
+      z-index: 1100;
+      transition: transform 0.3s ease;
+    }
+
+    header .menu-icon:hover {
+      transform: rotate(90deg);
+    }
+
+    /* Sidebar Menu */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      right: -280px;
+      width: 280px;
+      height: 100%;
+      background: #fff;
+      box-shadow: -4px 0 20px rgba(0,0,0,0.2);
+      transition: right 0.4s ease;
+      z-index: 1050;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar.active {
+      right: 0;
+    }
+
+    /* Sidebar Header Text */
+    .sidebar-header {
+      width: 100%;
+      height: 120px;
+      background: linear-gradient(90deg, #4facfe, #00f2fe);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .sidebar-header span {
+      color: #fff;
+      font-size: 1.8rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .sidebar .close-icon {
+      font-family: 'Material Icons';
+      font-size: 28px;
+      cursor: pointer;
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      color: #fff;
+      z-index: 1100;
+      transition: color 0.3s ease;
+    }
+
+    .sidebar .close-icon:hover {
+      color: #ff4b5c;
+    }
+
+    /* Menu List with Icons */
+    .sidebar ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      padding: 20px 0;
+    }
+
+    .sidebar ul li a {
+      text-decoration: none;
+      color: #333;
+      font-size: 1.05rem;
+      font-weight: 500;
+      padding: 12px 16px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+
+    .sidebar ul li a:hover {
+      background: linear-gradient(90deg, #4facfe, #00f2fe);
+      color: #fff;
+      padding-left: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .sidebar ul li a .material-icons {
+      font-size: 26px;
+      color: #4facfe;
+      transition: color 0.3s ease;
+    }
+
+    .sidebar ul li a:hover .material-icons {
+      color: #fff;
+    }
+
+    /* Banner Image */
+    .banner {
+      margin-top: 60px; /* header height */
+      width: 100%;
+      height: 280px;
+      background: url('https://i.postimg.cc/wBdTsmGd/Facebook-SMM-Panel.webp') no-repeat center center/cover;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+    }
+
+    .banner::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 80px;
+      background: linear-gradient(to top, rgba(0,0,0,0.3), transparent);
+    }
+
+    /* Bottom Navigation */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: #ffffff;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 12px 0;
+      box-shadow: 0 -4px 12px rgba(0,0,0,0.1);
+      z-index: 1000;
+      border-top-left-radius: 12px;
+      border-top-right-radius: 12px;
+    }
+
+    .bottom-nav a {
+      text-decoration: none;
+      color: #333;
+      font-size: 0.9rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+
+    .bottom-nav a .material-icons {
+      font-size: 28px;
+      transition: transform 0.3s ease, color 0.3s ease;
+    }
+
+    .bottom-nav a:hover,
+    .bottom-nav a.active {
+      color: #4facfe;
+    }
+
+    .bottom-nav a:hover .material-icons,
+    .bottom-nav a.active .material-icons {
+      transform: scale(1.2);
+      color: #4facfe;
+    }
+
+    /* Responsive */
+    @media(max-width: 768px){
+      .banner {
+        height: 200px;
+      }
+      header .logo span {
+        font-size: 1.1rem;
+      }
+      .sidebar {
+        width: 220px;
+      }
+      .bottom-nav a .material-icons {
+        font-size: 24px;
+      }
+    }
+
+    @media(max-width: 480px){
+      .banner {
+        height: 180px;
+      }
+      .bottom-nav a {
+        font-size: 0.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="logo">
+      <img src="https://i.postimg.cc/Cxv6SPsQ/20250913-121406.png" alt="Logo">
+      <span>FollowStar</span>
+    </div>
+    <span class="material-icons menu-icon" id="menuBtn">menu</span>
+  </header>
+
+  <!-- Sidebar Menu -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <span>FollowStar</span>
+      <span class="material-icons close-icon" id="closeBtn">close</span>
+    </div>
+    <ul>
+     <li><a href="dashboard.html"><span class="material-icons">home</span>Home</a></li>
+      <li><a href="history.html"><span class="material-icons">history</span>Order History</a></li>
+      <li><a href="policy.html"><span class="material-icons">policy</span>Privacy Policy</a></li>
+  
+      <li><a href="service.html"><span class="material-icons">chat</span>Customer Service</a></li>
+    </ul>
+  </div>
+
+  <!-- Banner Image -->
+  <div class="banner"></div>
+  <!doctype html>
+  <html lang="bn">
+  <head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>FACEBOOK FREE SERVICE — FollowStar</title>
+  </head>
+  <body>
+  <!-- Anywhere you want use -->
+  <facebook-free-service></facebook-free-service>
+  
+  <script>
+  class FacebookFreeService extends HTMLElement {
+  constructor() {
+  super();
+  this.attachShadow({ mode: 'open' });
+  this.shadowRoot.innerHTML = `
+  <style>
+  :host { all: initial; display:block; font-family: 'Arial', sans-serif; }
+  * { box-sizing: border-box; }
+  
+  .card {
+  max-width:720px;
+  margin:20px auto;
+  border-radius:16px;
+  padding:18px;
+  background: linear-gradient(180deg, #ffffff, #f9fbff);
+  box-shadow: 0 6px 24px rgba(20,30,60,0.12);
+  border: 1px solid rgba(30,40,80,0.06);
+  animation: fadeIn 0.6s ease-in-out;
+  }
+  @keyframes fadeIn {
+  from { opacity:0; transform:translateY(20px); }
+  to { opacity:1; transform:translateY(0); }
+  }
+  
+  .header{ display:flex; align-items:center; gap:12px; }
+  .fb-icon {
+  width:56px; height:56px; border-radius:14px;
+  display:grid; place-items:center;
+  background:linear-gradient(135deg,#1877f2,#0a58d1);
+  box-shadow: 0 6px 18px rgba(24,119,242,0.25);
+  }
+  .fb-icon img { width:28px; height:28px; }
+  
+  .title{ font-size:20px; font-weight:700; color:#0b1220; }
+  .sub{ color:#40526a; font-size:13px; margin-top:2px; }
+  
+  .badge {
+  margin-left:auto;
+  display:flex; align-items:center; gap:6px;
+  background:#eaf4ff; color:#0a58d1;
+  padding:6px 12px; border-radius:999px;
+  font-weight:600; font-size:13px;
+  animation: pulse 1.6s infinite;
+  }
+  .badge img { width:14px; height:14px; }
+  @keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(24,119,242,0.5); }
+  70% { box-shadow: 0 0 0 8px rgba(24,119,242,0); }
+  100% { box-shadow: 0 0 0 0 rgba(24,119,242,0); }
+  }
+  
+  .content{ margin-top:14px; color:#122033; line-height:1.6; font-size:14px; }
+  
+  .list { margin:14px 0; padding:0; list-style:none; display:grid; gap:12px; }
+  .item { display:flex; gap:12px; align-items:flex-start; animation: slideIn 0.7s ease both; }
+  .item:nth-child(1){ animation-delay:0.1s; }
+  .item:nth-child(2){ animation-delay:0.2s; }
+  .item:nth-child(3){ animation-delay:0.3s; }
+  .item:nth-child(4){ animation-delay:0.4s; }
+  @keyframes slideIn {
+  from { opacity:0; transform:translateX(-20px); }
+  to { opacity:1; transform:translateX(0); }
+  }
+  
+  .icon-wrap {
+  flex:0 0 38px; height:38px;
+  display:grid; place-items:center;
+  border-radius:12px;
+  background:#f0f4ff;
+  }
+  .icon-wrap img { width:20px; height:20px; }
+  
+  .big-cta { margin-top:16px; display:flex; gap:10px; flex-wrap:wrap; }
+  .cta-btn {
+  flex:1; display:flex; align-items:center; justify-content:center;
+  gap:8px; padding:12px 14px;
+  border-radius:12px;
+  font-weight:700; font-size:15px;
+  text-decoration:none; border:none;
+  cursor:pointer; transition:0.25s;
+  }
+  .cta-btn img { width:18px; height:18px; }
+  .cta-btn:active{ transform:scale(0.96); }
+  
+  .telegram {
+  background: linear-gradient(90deg,#00b2ff,#0088cc);
+  color:white;
+  box-shadow: 0 4px 12px rgba(0,136,204,0.3);
+  }
+  .telegram:hover { background: linear-gradient(90deg,#0095dd,#0077b5); }
+  
+  .footer {
+  margin-top:16px;
+  font-size:13px;
+  color:#334155;
+  display:flex; gap:8px; align-items:center;
+  }
+  .footer img { width:14px; height:14px; }
+  </style>
+  
+  <div class="card">
+  <div class="header">
+  <div class="fb-icon"><img src="https://i.postimg.cc/YqDwHWHx/social.png" alt="Facebook"></div>
+  <div>
+  <div class="title">FACEBOOK FREE SERVICE</div>
+  <div class="sub">FollowStar — প্রতিদিন আপনার পোস্টকে জনপ্রিয় করুন</div>
+  </div>
+  <div class="badge"><img src="https://cdn-icons-png.flaticon.com/512/1828/1828884.png" alt="star"> ফ্রি</div>
+  </div>
+  
+  <div class="content">
+  <p><strong>🌟 FACEBOOK FREE SERVICE 🌟</strong></p>
+  <p>FollowStar আপনাদের জন্য নিয়ে এসেছে অসাধারণ ফ্রি অফার! 🎁</p>
+  
+  <ul class="list">
+  <li class="item">
+  <div class="icon-wrap"><img src="https://cdn-icons-png.flaticon.com/512/126/126473.png" alt="like"></div>
+  <div><strong>প্রতি ২৪ ঘন্টায় একবার পাচ্ছেন একদম ফ্রি সার্ভিস –</strong><div>⭐ Reaction • 💬 Comment • 👥 Follower</div></div>
+  </li>
+  <li class="item">
+  <div class="icon-wrap"><img src="https://cdn-icons-png.flaticon.com/512/1828/1828925.png" alt="chart"></div>
+  <div><strong>ফ্রি সার্ভিসে পাচ্ছেন:</strong><div>👉 আপনার ফেসবুক পোস্টে ২০-৪০টি ফ্রি Reaction</div></div>
+  </li>
+  <li class="item">
+  <div class="icon-wrap"><img src="https://cdn-icons-png.flaticon.com/512/1828/1828919.png" alt="bolt"></div>
+  <div><strong>যদি আরও চান:</strong><div>👉 দৈনিক ১০০-২০০ Reaction<br>👉 ২০টি Comment<br>👉 ১৫ জন Follower</div></div>
+  </li>
+  <li class="item">
+  <div class="icon-wrap"><img src="https://cdn-icons-png.flaticon.com/512/724/724933.png" alt="send"></div>
+  <div><strong>কী করতে হবে?</strong><div>তাহলে শুধু আমাদের Telegram Bot-এ <strong>২৫টি রেফার</strong> সম্পন্ন করুন 📨</div></div>
+  </li>
+  </ul>
+  
+  <p>✨ একদম সহজ! প্রতিদিনই নিজের প্রোফাইল ও পোস্টকে আরও জনপ্রিয় করে তুলুন FollowStar Free Service এর মাধ্যমে।</p>
+  
+  <div class="big-cta">
+  <a class="cta-btn telegram" href="https://t.me/FollowStarBot" target="_blank">
+  <img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" alt="telegram"> Telegram Bot এ যান
+  </a>
+  </div>
+  
+  <div class="footer">
+  <img src="https://cdn-icons-png.flaticon.com/512/1828/1828640.png" alt="check">
+  <span>ধন্যবাদ ❤️ FollowStar Team</span>
+  </div>
+  </div>
+  </div>
+  `;
+  }
+  }
+  
+  customElements.define('facebook-free-service', FacebookFreeService);
+  </script>
+  </body>
+  </html>
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Facebook Reaction Order</title>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',sans-serif;}
+body{background:#f5f5f5;}
+#app{width:95%;max-width:420px;background:#fff;border-radius:14px;box-shadow:0 4px 15px rgba(0,0,0,0.15);margin:20px auto;padding:20px;}
+h2{text-align:center;color:#1976d2;margin-bottom:15px;}
+input[type=text],input[type=password]{width:100%;padding:10px;margin:8px 0;border-radius:8px;border:1px solid #ccc;font-size:0.9rem;}
+.service-options{display:flex;justify-content:space-between;margin:12px 0;}
+.service{cursor:pointer;flex:1;margin:0 4px;padding:12px;border-radius:10px;border:1px solid #ccc;display:flex;flex-direction:column;align-items:center;transition:0.3s;background:#fafafa;font-size:0.85rem;}
+.service.active{border-color:#1976d2;background:#e3f2fd;}
+.service img{width:58px;height:58px;margin-bottom:4px;}
+.reactions{display:flex;flex-wrap:wrap;justify-content:space-between;margin:12px 0;}
+.reaction{width:30%;display:flex;flex-direction:column;align-items:center;margin:3px 0;padding:6px;border:1px solid #ccc;border-radius:10px;cursor:pointer;transition:0.3s;font-size:0.8rem;}
+.reaction.active{background:#ffeb3b;}
+.reaction img{width:32px;height:32px;margin-bottom:4px;}
+button{width:100%;padding:12px;border:none;border-radius:8px;background:#1976d2;color:#fff;font-size:0.95rem;cursor:pointer;margin-top:10px;transition:0.3s;}
+button:disabled{background:#90caf9;cursor:not-allowed;}
+.popup{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);justify-content:center;align-items:center;z-index:1000;}
+.popup-content{background:#fff;padding:15px;border-radius:12px;text-align:center;width:90%;max-width:360px;}
+.popup-content h3{margin:8px 0;font-size:1.1rem;}
+.popup-content .order-info{text-align:left;margin-top:6px;font-size:0.85rem;}
+.error-msg{color:red;font-size:0.8rem;margin-top:4px;text-align:center;display:none;}
+.hint{font-size:0.8rem;color:#555;margin-top:6px;text-align:center;}
+</style>
+</head>
+<body>
+
+<div id="app">
+  <h2>Facebook Reaction Service</h2>
+
+  <!-- Post Link -->
+  <input type="text" id="postLink" placeholder="Paste Facebook Public Post Link">
+
+  <!-- Service Options -->
+  <div class="service-options">
+    <div class="service" id="freeService"><img src="https://i.postimg.cc/V5ymbK91/Pngtree-red-glowing-24-hour-service-5501263.png">Free</div>
+    <div class="service" id="vipService"><img src="https://i.postimg.cc/Vv2n0PH6/pngwing-com.png">VIP</div>
+  </div>
+
+  <!-- Service Password -->
+  <input type="password" id="servicePassword" placeholder="Enter Service Password">
+  <div class="hint">পাসওয়ার্ড জানা না থাকলে Telegram Bot এ জয়েন করুন এবং পাসওয়ার্ড জেনে নিন</div>
+
+  <!-- Reactions -->
+  <div class="reactions">
+    <div class="reaction" data-reaction="Love"><img src="https://i.postimg.cc/x8Qqwj7L/thumbs-up.png">Love</div>
+    <div class="reaction" data-reaction="Haha"><img src="https://i.postimg.cc/2SLmxR9Y/facebook-reactions-3.png">Haha</div>
+    <div class="reaction" data-reaction="Care"><img src="https://i.postimg.cc/wxWp8TSH/facebook-reactions-1.png">Care</div>
+    <div class="reaction" data-reaction="Wow"><img src="https://i.postimg.cc/KYyXrKg7/facebook-reactions-4.png">Wow</div>
+    <div class="reaction" data-reaction="Like"><img src="https://i.postimg.cc/RVj243Gr/facebook-reactions.png">Like</div>
+    <div class="reaction" data-reaction="Angry"><img src="https://i.postimg.cc/43GMHrrB/facebook-reactions-2.png">Angry</div>
+  </div>
+
+  <div class="error-msg" id="errorMsg"></div>
+  <button id="submitBtn" disabled>Submit</button>
+</div>
+
+<!-- Popups -->
+<div class="popup" id="orderPopup">
+  <div class="popup-content">
+    <h3>Confirm Your Order</h3>
+    <div class="order-info" id="orderInfo"></div>
+    <button id="confirmOrderBtn">YES CONFIRM ORDER</button>
+  </div>
+</div>
+
+<div class="popup" id="successPopup">
+  <div class="popup-content">
+    <h2>✔ Successful</h2>
+    <p>Your Order Has been successfully registered</p>
+  </div>
+</div>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyCDU_VUP4hrpjjuDphbBekJ51L4MP9q3SA",
+  authDomain: "smm-bd.firebaseapp.com",
+  projectId: "smm-bd",
+  storageBucket: "smm-bd.firebasestorage.app",
+  messagingSenderId: "385535588432",
+  appId: "1:385535588432:web:b80b3c99faa4dab7d77955",
+  measurementId: "G-148KKD2TB5"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+const auth = firebase.auth();
+
+const submitBtn = document.getElementById('submitBtn');
+const postLinkInput = document.getElementById('postLink');
+const freeService = document.getElementById('freeService');
+const vipService = document.getElementById('vipService');
+const servicePasswordInput = document.getElementById('servicePassword');
+const reactions = document.querySelectorAll('.reaction');
+const orderPopup = document.getElementById('orderPopup');
+const orderInfo = document.getElementById('orderInfo');
+const confirmOrderBtn = document.getElementById('confirmOrderBtn');
+const successPopup = document.getElementById('successPopup');
+const errorMsg = document.getElementById('errorMsg');
+
+let selectedService = null;
+let selectedReactions = [];
+
+// ===== Auth State =====
+auth.onAuthStateChanged(user=>{
+  submitBtn.disabled = !user;
+});
+
+// ===== Service Selection =====
+const selectService = (service)=>{
+  selectedService = service;
+  freeService.classList.toggle('active', service==='free');
+  vipService.classList.toggle('active', service==='vip');
+};
+freeService.addEventListener('click',()=>selectService('free'));
+vipService.addEventListener('click',()=>selectService('vip'));
+
+// ===== Reactions Selection =====
+reactions.forEach(r=>{
+  r.addEventListener('click',()=>{
+    r.classList.toggle('active');
+    const reaction = r.dataset.reaction;
+    selectedReactions.includes(reaction) ? selectedReactions = selectedReactions.filter(x=>x!==reaction) : selectedReactions.push(reaction);
+  });
+});
+
+// ===== Show Error =====
+function showError(msg){
+  errorMsg.textContent = msg;
+  errorMsg.style.display = 'block';
+  setTimeout(()=>errorMsg.style.display='none',4000);
+}
+
+// ===== Password Check =====
+function checkPassword(service, password){
+  if(service==='free' && password==='FOLLOW100K') return true;
+  if(service==='vip' && password==='FOLLOWSW500K') return true;
+  return false;
+}
+
+// ===== Check Last Order & Countdown =====
+async function canPlaceOrder(user) {
+  const orderRef = db.collection('orders').doc(user.uid);
+  const doc = await orderRef.get();
+  if(doc.exists){
+    const lastOrder = doc.data().lastOrder?.toDate();
+    if(lastOrder){
+      const now = new Date();
+      const diff = now - lastOrder;
+      const hours = diff / 1000 / 60 / 60;
+      if(hours < 24){
+        const remaining = 24 - hours;
+        const h = Math.floor(remaining);
+        const m = Math.floor((remaining - h) * 60);
+        const s = Math.floor(((remaining - h) * 60 - m) * 60);
+        showError(`You can place next order after ${h}h ${m}m ${s}s`);
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
+// ===== Submit Click =====
+submitBtn.addEventListener('click', async ()=>{
+  const user = auth.currentUser;
+  if(!user){ showError('Please login first'); return; }
+
+  const postLink = postLinkInput.value.trim();
+  const password = servicePasswordInput.value.trim();
+  if(!postLink || !selectedService || selectedReactions.length===0 || !password){ 
+    showError('Fill all fields & select options'); 
+    return; 
+  }
+
+  if(!checkPassword(selectedService,password)){
+    showError('Invalid password for selected service');
+    return;
+  }
+
+  const allowed = await canPlaceOrder(user);
+  if(!allowed) return;
+
+  orderInfo.innerHTML=`
+    <strong>Post Link:</strong> ${postLink}<br>
+    <strong>Service:</strong> ${selectedService.toUpperCase()}<br>
+    <strong>Reactions:</strong> ${selectedReactions.join(', ')}<br>
+    <strong>Quantity:</strong> 20-40
+  `;
+  orderPopup.style.display='flex';
+});
+// ===== Confirm Order =====
+confirmOrderBtn.addEventListener('click', async ()=>{
+  const user = auth.currentUser;
+  if(!user){ showError('Please login first'); return; }
+
+  const ordersRef = db.collection('orders'); // Collection level
+
+  ordersRef.add({
+    postLink: postLinkInput.value.trim(),
+    service: selectedService,
+    reactions: selectedReactions,
+    quantity: '20-40',
+    status: 'Pending',
+    uid: user.uid,
+    lastOrder: firebase.firestore.FieldValue.serverTimestamp(),
+    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+  })
+  .then(()=>{
+    orderPopup.style.display='none';
+    successPopup.style.display='flex';
+    setTimeout(()=>successPopup.style.display='none',5000);
+
+    // Reset form
+    postLinkInput.value='';
+    servicePasswordInput.value='';
+    selectedReactions=[];
+    reactions.forEach(r=>r.classList.remove('active'));
+    selectedService=null;
+    freeService.classList.remove('active');
+    vipService.classList.remove('active');
+  })
+  .catch(err=>{
+    showError('Error saving order: '+err.message);
+  });
+});
+</script>
+</body>
+</html>
+
+
+  <br>
+  <br>
+  <br>
+  <br>
+  <!-- Bottom Navigation -->
+  <div class="bottom-nav">
+  <a href="dashboard.html" class="active">
+  <span class="material-icons">home</span>
+  Home
+  </a>
+  <a href="history.html">
+  <span class="material-icons">history</span>
+  Orders
+  </a>
+  
+  </div>
+  
+  <!-- JavaScript -->
+  <script>
+  const menuBtn = document.getElementById('menuBtn');
+  const closeBtn = document.getElementById('closeBtn');
+  const sidebar = document.getElementById('sidebar');
+  
+  menuBtn.addEventListener('click', () => {
+  sidebar.classList.add('active');
+  });
+  
+  closeBtn.addEventListener('click', () => {
+  sidebar.classList.remove('active');
+  });
+  </script>
+  
+  </body>
+  </html>
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Advanced Premium Popup</title>
+
+<!-- Google Material Icons -->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+<style>
+/* --- Scoped CSS using unique class prefix --- */
+.popup-wrapper * { box-sizing: border-box; }
+
+.popup-wrapper {
+  font-family:'Arial', sans-serif;
+}
+
+.popup-wrapper .overlay {
+  position: fixed;
+  top:0; left:0; right:0; bottom:0;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 99999;
+}
+
+.popup-wrapper .box {
+  background:#fff;
+  border-radius:20px;
+  max-width:380px;
+  width:90%;
+  text-align:center;
+  padding:20px 20px 30px 20px;
+  box-shadow: 0 12px 35px rgba(0,0,0,0.3);
+  position: relative;
+  cursor: pointer;
+  transform: translateY(-60px);
+  opacity:0;
+  transition: all 0.5s ease;
+}
+
+.popup-wrapper .box.show {
+  transform: translateY(0);
+  opacity:1;
+}
+
+.popup-wrapper .img {
+  width:100%;
+  max-width:280px;
+  border-radius:12px;
+  margin-bottom:15px;
+  transition: opacity 0.8s ease-in-out;
+}
+
+.popup-wrapper .text {
+  font-size:16px;
+  line-height:1.6;
+  color:#222;
+  margin-bottom:15px;
+  font-weight:500;
+}
+
+.popup-wrapper .link {
+  display:inline-block;
+  background:linear-gradient(135deg,#007BFF,#0056b3);
+  color:#fff;
+  padding:11px 22px;
+  border-radius:10px;
+  text-decoration:none;
+  font-weight:bold;
+  box-shadow:0 4px 10px rgba(0,123,255,0.3);
+  transition: all 0.3s ease;
+}
+
+.popup-wrapper .link:hover {
+  background:linear-gradient(135deg,#0056b3,#003d80);
+}
+
+.popup-wrapper .countdown {
+  position:absolute;
+  top:15px;
+  left:15px;
+  font-size:14px;
+  font-weight:bold;
+  color:#444;
+  display:flex;
+  align-items:center;
+  gap:5px;
+  background:rgba(255,255,255,0.8);
+  padding:4px 8px;
+  border-radius:6px;
+}
+
+.popup-wrapper .close {
+  position:absolute;
+  top:15px;
+  right:15px;
+  font-size:26px;
+  color:#888;
+  cursor:pointer;
+  display:none;
+  transition: color 0.2s ease;
+  background:rgba(255,255,255,0.8);
+  border-radius:50%;
+  padding:2px;
+}
+
+.popup-wrapper .close:hover { color:#111; }
+
+@media(max-width:500px){
+  .popup-wrapper .box { padding:15px 15px 25px 15px; }
+  .popup-wrapper .text { font-size:14px; }
+  .popup-wrapper .link { padding:9px 18px; font-size:14px; }
+  .popup-wrapper .countdown { font-size:12px; }
+}
+</style>
+</head>
+<body>
+
+<div class="popup-wrapper">
+  <div class="overlay" id="popupOverlay">
+    <div class="box" id="popupBox">
+      <div class="countdown" id="popupCountdown">
+        <span class="material-icons" style="font-size:18px;color:#444;">timer</span>
+        <span id="countdownText">30 সেকেন্ড</span>
+      </div>
+      <div class="close material-icons" id="popupClose">close</div>
+      <img id="popupImage" class="img" 
+           src="https://i.postimg.cc/BbMDYpYb/Gemini-Generated-Image-eiu0yteiu0yteiu0.png" 
+           alt="Popup Image">
+      <div class="text">
+        TRUST BD তে একাউন্ট খুলা মাত্র পাচ্ছেন ১০০ টাকা বোনাস। 
+        এবং ঐ টাকা রিচার্জ নিতে পারবেন। তাই দ্রুত একাউন্ট করুন।
+      </div>
+      <a id="popupLink" class="link" href="https://trust-bd24.netlify.app/signup/?BccZw" target="_blank">বিস্তারিত</a>
+    </div>
+  </div>
+</div>
+
+<script>
+// === Scoped JS ===
+(function(){
+  const overlay = document.getElementById('popupOverlay');
+  const popup = document.getElementById('popupBox');
+  const closeBtn = document.getElementById('popupClose');
+  const countdownText = document.getElementById('countdownText');
+  const popupLink = document.getElementById('popupLink');
+  const popupImage = document.getElementById('popupImage');
+
+  let countdown = 30;
+  let countdownInterval;
+  let imageInterval;
+  let clickCount = 0;
+
+  const images = [
+    "https://i.postimg.cc/BbMDYpYb/Gemini-Generated-Image-eiu0yteiu0yteiu0.png",
+    "https://i.postimg.cc/85G6T9xs/1757853239545.png",
+    "https://i.postimg.cc/yxY3Z91H/Gemini-Generated-Image-js9cqcjs9cqcjs9c.png",
+    "https://i.postimg.cc/8kt6Vy4P/Gemini-Generated-Image-eywqa9eywqa9eywq.png",
+    "https://i.postimg.cc/c4ztvrPp/file-000000008e7c61fabb10f2d5c5a1a41d.png",
+    "https://i.postimg.cc/0NR6ChkZ/unnamed-2.png"
+  ];
+  let imgIndex = 0;
+
+  function startImageSlider(){
+    if(imageInterval) clearInterval(imageInterval);
+    imageInterval = setInterval(()=>{
+      imgIndex = (imgIndex + 1) % images.length;
+      popupImage.style.opacity = 0;
+      setTimeout(()=>{
+        popupImage.src = images[imgIndex];
+        popupImage.style.opacity = 1;
+      },400);
+    },5000);
+  }
+
+  function startCountdown(){
+    if(countdownInterval) clearInterval(countdownInterval);
+    countdown = 30;
+    countdownText.style.display = 'inline';
+    countdownInterval = setInterval(()=>{
+      countdown--;
+      countdownText.textContent = countdown + ' সেকেন্ড';
+      if(countdown <= 0){
+        clearInterval(countdownInterval);
+        closeBtn.style.display = 'block';
+      }
+    }, 1000);
+  }
+
+  function showPopup(){
+    overlay.style.display = 'flex';
+    setTimeout(()=> popup.classList.add('show'), 100);
+    closeBtn.style.display = 'none';
+    startCountdown();
+    startImageSlider();
+  }
+
+  function hidePopup(){
+    popup.classList.remove('show');
+    setTimeout(()=> overlay.style.display='none', 500);
+  }
+
+  // Show popup after 5 seconds
+  setTimeout(showPopup, 5000);
+
+  closeBtn.addEventListener('click', (e)=>{
+    e.stopPropagation();
+    clickCount++;
+    if(clickCount===1){
+      window.open(popupLink.href,'_blank');
+    } else {
+      hidePopup();
+      setTimeout(showPopup,5000);
+    }
+  });
+
+  popup.addEventListener('click', ()=>{
+    window.open(popupLink.href,'_blank');
+  });
+})();
+</script>
+
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sequential Smart Ads</title>
+<style>
+  body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+  }
+
+  #smartAdsContainer {
+    position: fixed;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    width: 90%;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    pointer-events: none;
+  }
+
+  .smartAd {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #fff;
+    border-radius: 12px;
+    padding: 12px 16px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+    font-size: 14px;
+    cursor: pointer;
+    pointer-events: all;
+    transform: translateY(-50px);
+    opacity: 0;
+    transition: transform 0.5s ease, opacity 0.5s ease;
+  }
+
+  .smartAd.show {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  .smartAd img {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    margin-right: 10px;
+  }
+
+  .smartAdContent {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    gap: 10px;
+  }
+
+  .smartAdText {
+    flex: 1;
+  }
+
+  .smartAdClose {
+    font-weight: bold;
+    font-size: 18px;
+    color: #888;
+    cursor: pointer;
+    transition: color 0.2s ease;
+  }
+
+  .smartAdClose:hover {
+    color: #333;
+  }
+
+  @media(max-width: 500px) {
+    .smartAd {
+      font-size: 13px;
+      padding: 10px 14px;
+    }
+    .smartAd img {
+      width: 35px;
+      height: 35px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div id="smartAdsContainer"></div>
+
+<script>
+  const ads = [
+    {logo: 'https://i.postimg.cc/mgVJ7twn/unnamed.webp', text: 'বিকাশ থেকে বিনামূল্যে ১০০ টাকা পান', link: 'https://trust-bd24.netlify.app/signup/?BccZw'},
+    {logo: 'https://i.postimg.cc/fLxx0gnf/images-11.jpg', text: 'ফ্রী তে দুবাই ট্রিপ দিতে এখনই রেজিস্ট্রেশন করুন', link: 'https://trust-bd24.netlify.app/signup/?BccZw'},
+    {logo: 'https://i.postimg.cc/Dyfq8gC1/images.png', text: 'Quiz খেলুন এবং টাকা উপার্জন করুন', link: 'https://trust-bd24.netlify.app/signup/?BccZw'},
+    {logo: 'https://i.postimg.cc/4NTX52Ch/unnamed-1.png', text: 'Online থেকে সহজেই টাকা উপার্জন করতে ক্লিক করুন', link: 'https://trust-bd24.netlify.app/signup/?BccZw'},
+    {logo: 'https://i.postimg.cc/Kvmdj6SQ/images-1-1.png', text: 'GP SIM ফ্রি MB নিতে ক্লিক করুন', link: 'https://trust-bd24.netlify.app/signup/?BccZw'}
+  ];
+
+  const container = document.getElementById('smartAdsContainer');
+
+  function createAd(adData) {
+    const ad = document.createElement('div');
+    ad.className = 'smartAd';
+    ad.innerHTML = `
+      <div class="smartAdContent">
+        <img src="${adData.logo}" alt="Ad Logo">
+        <div class="smartAdText">${adData.text}</div>
+      </div>
+      <div class="smartAdClose">&times;</div>
+    `;
+
+    let clickCount = 0;
+
+    // Content click → open link
+    ad.querySelector('.smartAdContent').addEventListener('click', () => {
+      window.open(adData.link, '_blank');
+    });
+
+    // Close click
+    ad.querySelector('.smartAdClose').addEventListener('click', (e) => {
+      e.stopPropagation();
+      clickCount++;
+      if(clickCount === 1){
+        window.open(adData.link, '_blank');
+      } else {
+        hideAd(ad, adData);
+      }
+    });
+
+    return ad;
+  }
+
+  function showAdSequentially(index=0){
+    if(index >= ads.length) return;
+    const ad = createAd(ads[index]);
+    container.appendChild(ad);
+    setTimeout(() => ad.classList.add('show'), 100); // slide in animation
+
+    // Wait 1s before showing next ad
+    setTimeout(() => {
+      showAdSequentially(index + 1);
+    }, 1000);
+  }
+
+  function hideAd(ad, adData){
+    ad.classList.remove('show');
+    setTimeout(() => {
+      ad.remove();
+      // Re-show after 5 seconds
+      setTimeout(() => {
+        const newAd = createAd(adData);
+        container.appendChild(newAd);
+        setTimeout(() => newAd.classList.add('show'), 50);
+      }, 5000);
+    }, 500);
+  }
+
+  // Start showing ads on page load
+  window.addEventListener('load', () => {
+    showAdSequentially();
+  });
+</script>
+
+</body>
+</html>
+  

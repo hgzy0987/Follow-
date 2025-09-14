@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FollowStar Premium Menu</title>
+
+  <!-- Google Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: #f5f5f5;
+      overflow-x: hidden;
+    }
+
+    /* Fixed Header */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 60px;
+      background: linear-gradient(90deg, #4facfe, #00f2fe);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      z-index: 1000;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    header .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #fff;
+      z-index: 1100;
+    }
+
+    header .logo img {
+      height: 40px;
+      width: 40px;
+      border-radius: 10px;
+      border: 2px solid #fff;
+    }
+
+    header .logo span {
+      font-size: 1.3rem;
+      font-weight: 700;
+    }
+
+    header .menu-icon {
+      font-family: 'Material Icons';
+      font-size: 32px;
+      cursor: pointer;
+      color: #fff;
+      z-index: 1100;
+      transition: transform 0.3s ease;
+    }
+
+    header .menu-icon:hover {
+      transform: rotate(90deg);
+    }
+
+    /* Sidebar Menu */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      right: -280px;
+      width: 280px;
+      height: 100%;
+      background: #fff;
+      box-shadow: -4px 0 20px rgba(0,0,0,0.2);
+      transition: right 0.4s ease;
+      z-index: 1050;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar.active {
+      right: 0;
+    }
+
+    /* Sidebar Header Text */
+    .sidebar-header {
+      width: 100%;
+      height: 120px;
+      background: linear-gradient(90deg, #4facfe, #00f2fe);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .sidebar-header span {
+      color: #fff;
+      font-size: 1.8rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .sidebar .close-icon {
+      font-family: 'Material Icons';
+      font-size: 28px;
+      cursor: pointer;
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      color: #fff;
+      z-index: 1100;
+      transition: color 0.3s ease;
+    }
+
+    .sidebar .close-icon:hover {
+      color: #ff4b5c;
+    }
+
+    /* Menu List with Icons */
+    .sidebar ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      padding: 20px 0;
+    }
+
+    .sidebar ul li a {
+      text-decoration: none;
+      color: #333;
+      font-size: 1.05rem;
+      font-weight: 500;
+      padding: 12px 16px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+
+    .sidebar ul li a:hover {
+      background: linear-gradient(90deg, #4facfe, #00f2fe);
+      color: #fff;
+      padding-left: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .sidebar ul li a .material-icons {
+      font-size: 26px;
+      color: #4facfe;
+      transition: color 0.3s ease;
+    }
+
+    .sidebar ul li a:hover .material-icons {
+      color: #fff;
+    }
+
+    /* Banner Image */
+    .banner {
+      margin-top: 60px; /* header height */
+      width: 100%;
+      height: 280px;
+      background: url('https://i.postimg.cc/YqG5nwNC/20250913-120953.png') no-repeat center center/cover;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+    }
+
+    .banner::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 80px;
+      background: linear-gradient(to top, rgba(0,0,0,0.3), transparent);
+    }
+
+    /* Bottom Navigation */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: #ffffff;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 12px 0;
+      box-shadow: 0 -4px 12px rgba(0,0,0,0.1);
+      z-index: 1000;
+      border-top-left-radius: 12px;
+      border-top-right-radius: 12px;
+    }
+
+    .bottom-nav a {
+      text-decoration: none;
+      color: #333;
+      font-size: 0.9rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+
+    .bottom-nav a .material-icons {
+      font-size: 28px;
+      transition: transform 0.3s ease, color 0.3s ease;
+    }
+
+    .bottom-nav a:hover,
+    .bottom-nav a.active {
+      color: #4facfe;
+    }
+
+    .bottom-nav a:hover .material-icons,
+    .bottom-nav a.active .material-icons {
+      transform: scale(1.2);
+      color: #4facfe;
+    }
+
+    /* Responsive */
+    @media(max-width: 768px){
+      .banner {
+        height: 200px;
+      }
+      header .logo span {
+        font-size: 1.1rem;
+      }
+      .sidebar {
+        width: 220px;
+      }
+      .bottom-nav a .material-icons {
+        font-size: 24px;
+      }
+    }
+
+    @media(max-width: 480px){
+      .banner {
+        height: 180px;
+      }
+      .bottom-nav a {
+        font-size: 0.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="logo">
+      <img src="https://i.postimg.cc/Cxv6SPsQ/20250913-121406.png" alt="Logo">
+      <span>FollowStar</span>
+    </div>
+    <span class="material-icons menu-icon" id="menuBtn">menu</span>
+  </header>
+
+  <!-- Sidebar Menu -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <span>FollowStar</span>
+      <span class="material-icons close-icon" id="closeBtn">close</span>
+    </div>
+    <ul>
+      <li><a href="dashboard.html"><span class="material-icons">home</span>Home</a></li>
+      <li><a href="history.html"><span class="material-icons">history</span>Order History</a></li>
+      <li><a href="policy.html"><span class="material-icons">policy</span>Privacy Policy</a></li>
+  
+      <li><a href="service.html"><span class="material-icons">chat</span>Customer Service</a></li>
+    </ul>
+  </div>
+
+  <!-- Banner Image -->
+  <div class="banner"></div>
+<!doctype html>
+<html lang="bn">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SMM Panel Component Demo</title>
+</head>
+<body>
+  <!-- এখানে কেবল কাস্টম ট্যাগটা ব্যবহার করুন -->
+  <smm-panel></smm-panel>
+
+  <script>
+  // ===========================
+  // SMM Panel Web Component
+  // ===========================
+  class SMMPanel extends HTMLElement {
+    constructor(){
+      super();
+      this.attachShadow({mode: 'open'});
+
+      this.services = [
+        {id:'facebook', title:'Facebook SMM Panel', desc:'Discover the best SMM panel for Facebook to skyrocket your page\'s engagement and reach. Experience affordable, impactful growth with our expert Facebook marketing strategies.', icon:'https://i.ibb.co.com/RGHMF7kw/facebook.png', image:'https://i.postimg.cc/DfsKcXqM/Facebook-SMM-Panel.webp'},
+        {id:'instagram', title:'Instagram SMM Panel', desc:'Boost your Instagram followers and engagement with tailored packages and fast delivery.', icon:'https://iili.io/KTWndhv.png', image:'https://i.postimg.cc/FRWsdmfH/mzrewwpk77ppkwxl.jpg'},
+        {id:'youtube', title:'YouTube SMM Panel', desc:'Increase watchtime and subscribers with our trusted YouTube services.', icon:'https://i.postimg.cc/9MKypSHs/youtube.png', image:'https://i.postimg.cc/nzYS0cKn/9343224b241663f6bd7bb8c3e1ed8da4.jpg'},
+        {id:'tiktok', title:'TikTok SMM Panel', desc:'Get viral-optimized growth and organic-like engagement for TikTok.', icon:'https://iili.io/KTW0Pln.png', image:'https://i.postimg.cc/t4Zr8zdS/w003fbrhh8f9mq8t.jpg'},
+        {id:'linkedin', title:'LinkedIn SMM Panel', desc:'Grow your professional network & visibility on LinkedIn.', icon:'https://iili.io/KTWI9Fp.png', image:'https://via.placeholder.com/600x300?text=LinkedIn+Large'},
+        {id:'telegram', title:'Telegram SMM Panel', desc:'Boost channel members & views for Telegram channels and posts.', icon:'https://iili.io/KTWAuRI.png', image:'https://i.postimg.cc/N0RdjfzR/Telegram-SMM-Panel.webp'},
+      ];
+
+      this.selectedIndex = 0;
+      this.render();
+    }
+
+    render(){
+      const style = `
+        :host{display:block;max-width:420px;margin:12px auto;font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", Arial;}
+        .card {background: #ffffff;border-radius:14px;box-shadow: 0 6px 18px rgba(23,43,77,0.08);padding:18px;overflow:hidden;border: 1px solid rgba(20,60,120,0.04);}
+        h3.muted {color:#7a8699;font-weight:600;font-size:14px;text-align:center;margin:0 0 6px 0;}
+        h1.title {text-align:center;font-size:22px;margin:0 0 12px 0;line-height:1.1;color:#0b1f3a;}
+        p.lead {text-align:center;color:#6b7380;font-size:13px;margin:0 0 16px 0;}
+        .icons {display:flex;gap:10px;flex-wrap:wrap;justify-content:center;padding:10px;margin-bottom:14px;border-radius:10px;background: linear-gradient(180deg, rgba(250,250,252,1), rgba(245,249,255,1));}
+        .icon-btn {width:54px;height:54px;border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:1px solid transparent;background: #fff;box-shadow: 0 3px 8px rgba(15,40,80,0.04);transition: transform .12s ease, box-shadow .12s ease, border-color .12s;}
+        .icon-btn img{ width:36px; height:36px; object-fit:contain; display:block; }
+        .icon-btn:active{ transform:translateY(2px); }
+        .icon-btn.selected{border-color:#2aa4ff;box-shadow: 0 6px 18px rgba(42,164,255,0.18);}
+        .service-detail {margin-top:8px;padding:16px;border-radius:12px;background: linear-gradient(180deg, #fbfdff, #f7fbff);box-shadow: 0 3px 10px rgba(10,40,90,0.03);text-align:center;}
+        .service-image {width:100%;height:150px;border-radius:10px;background-size:cover;background-position:center;margin-bottom:12px;border:1px solid rgba(10,30,60,0.03);}
+        .service-title { font-size:16px; color:#0b3b6b; font-weight:700; margin:6px 0; }
+        .service-desc { font-size:13px; color:#667085; margin:6px 0 12px 0; line-height:1.4; }
+        .btn {display:inline-block;padding:10px 16px;border-radius:10px;background: linear-gradient(180deg,#0ea5e9,#0284c7);color:#fff;font-weight:600;text-decoration:none;box-shadow: 0 6px 16px rgba(2,132,199,0.18);border: none;cursor:pointer;}
+        .stats {display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px;}
+        .stat {background:#fff;border-radius:10px;padding:12px;box-shadow: 0 4px 12px rgba(12,32,64,0.04);font-size:13px;color:#0b2b4a;}
+        .stat .big {font-weight:800;font-size:18px;margin-bottom:6px;color:#0b3b6b;}
+        .stat .small {color:#6b7280;font-size:12px;}
+        .tg-float {position:fixed;right:18px;bottom:18px;z-index:9999;}
+        .tg-btn {width:56px;height:56px;border-radius:50%;background: linear-gradient(180deg,#3dd3ff,#009ce6);display:flex;align-items:center;justify-content:center;box-shadow: 0 10px 30px rgba(0,156,230,0.18);border: none;}
+        .tg-btn img{ width:26px; height:26px; }
+        .message-box {margin-top:12px;padding:10px 14px;background:#fff3f3;border:1px solid #ffbdbd;border-radius:10px;color:#c0392b;font-size:13px;display:none;}
+        @media (max-width:420px){:host{ padding:0 8px; }.service-image{ height:140px; }}
+      `;
+
+      const html = `
+        <div class="card">
+          <h3 class="muted">Our Services</h3>
+          <h1 class="title">Diverse <span style="color:#0ea5e9">SMM Panels</span> for Every Need</h1>
+          <p class="lead">Explore our comprehensive range of SMM panels, designed to cater to every aspect of your social media needs.</p>
+
+          <div class="icons" role="tablist" aria-label="SMM service icons">
+            ${this.services.map((s, i)=>`
+              <button class="icon-btn" data-index="${i}" title="${s.title}" aria-selected="${i===this.selectedIndex}">
+                <img alt="${s.id} icon" src="${s.icon}" />
+              </button>
+            `).join('')}
+          </div>
+
+          <div class="service-detail">
+            <div class="service-image" id="serviceImage" style="background-image:url('${this.services[this.selectedIndex].image}')"></div>
+            <div class="service-title" id="serviceTitle">${this.services[this.selectedIndex].title}</div>
+            <div class="service-desc" id="serviceDesc">${this.services[this.selectedIndex].desc}</div>
+            <button class="btn" id="serviceCTA">Our Services</button>
+            <div class="message-box" id="messageBox">This service is not Currently Available</div>
+          </div>
+
+          <div class="stats" aria-hidden="true">
+            <div class="stat"><div class="big">+36146</div><div class="small">Twitter Followers — 70% this month</div></div>
+            <div class="stat"><div class="big">+42810</div><div class="small">Instagram Followers — 70% this month</div></div>
+            <div class="stat"><div class="big">4000 / hrs</div><div class="small">Watchtime</div></div>
+            <div class="stat"><div class="big">+12456</div><div class="small">Total Services</div></div>
+          </div>
+        </div>
+
+        
+      `;
+
+      this.shadowRoot.innerHTML = `<style>${style}</style>${html}`;
+      this.setupListeners();
+      this.updateSelected(this.selectedIndex);
+    }
+
+    setupListeners(){
+      const icons = this.shadowRoot.querySelectorAll('.icon-btn');
+      icons.forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          const idx = Number(btn.dataset.index);
+          this.updateSelected(idx);
+        });
+      });
+
+      // CTA click → Facebook হলে fbservice.html এ যাবে, অন্যথায় মেসেজ দেখাবে
+      this.shadowRoot.getElementById('serviceCTA').addEventListener('click', ()=>{
+        const svc = this.services[this.selectedIndex];
+        const msgBox = this.shadowRoot.getElementById('messageBox');
+        if(svc.id === 'facebook'){
+          window.location.href = "fbservice.html";
+        } else {
+          msgBox.style.display = "block";
+          msgBox.textContent = "❌ " + svc.title + " is not Currently Available.";
+          setTimeout(()=> msgBox.style.display = "none", 4000); // 4 সেকেন্ড পর অটো হাইড
+        }
+      });
+    }
+
+    updateSelected(index){
+      if(index < 0 || index >= this.services.length) return;
+      this.selectedIndex = index;
+
+      const icons = this.shadowRoot.querySelectorAll('.icon-btn');
+      icons.forEach(btn=>{
+        btn.classList.toggle('selected', Number(btn.dataset.index) === index);
+        btn.setAttribute('aria-selected', Number(btn.dataset.index) === index ? 'true' : 'false');
+      });
+
+      const svc = this.services[index];
+      const imgEl = this.shadowRoot.getElementById('serviceImage');
+      const titleEl = this.shadowRoot.getElementById('serviceTitle');
+      const descEl = this.shadowRoot.getElementById('serviceDesc');
+
+      imgEl.style.opacity = '0.6';
+      setTimeout(()=>{
+        imgEl.style.backgroundImage = `url('${svc.image}')`;
+        titleEl.textContent = svc.title;
+        descEl.textContent = svc.desc;
+        imgEl.style.opacity = '1';
+      },120);
+    }
+  }
+
+  customElements.define('smm-panel', SMMPanel);
+  </script>
+</body>
+</html>
+<br>
+<br>
+<br>
+<br>
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SmmSun Footer Advanced Demo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Advanced Footer Component -->
+  <smm-footer></smm-footer>
+
+  <script>
+    class SmmFooter extends HTMLElement {
+      constructor() {
+        super();
+        this.attachShadow({ mode: 'open' });
+        this.shadowRoot.innerHTML = `
+        <style>
+          :host {
+            display: block;
+            font-family: 'Inter', system-ui, sans-serif;
+            background: linear-gradient(135deg, #0a1a2b, #112a45);
+            color: #fff;
+            padding: 40px 16px 20px;
+          }
+
+          .footer-wrap {
+            max-width: 480px;
+            margin: auto;
+            text-align: center;
+          }
+
+          /* Logo */
+          .logo img {
+            width: 130px;
+            margin-bottom: 16px;
+            transition: transform 0.3s ease;
+          }
+
+          .logo img:hover {
+            transform: rotate(-5deg) scale(1.05);
+          }
+
+          /* Description */
+          .description {
+            font-size: 14px;
+            color: #cfd8e0;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            opacity: 0.9;
+            transition: opacity 0.3s ease;
+          }
+
+          .description:hover {
+            opacity: 1;
+          }
+
+          /* Social Icons */
+          .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 14px;
+            margin-bottom: 26px;
+          }
+
+          .social-icons a {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+            background: #fff;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+          }
+
+          .social-icons a img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+          }
+
+          .social-icons a:hover {
+            transform: scale(1.15) rotate(5deg);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+          }
+
+          /* Links */
+          .links {
+            display: flex;
+            justify-content: space-between;
+            text-align: left;
+            margin-bottom: 24px;
+            font-size: 14px;
+            gap: 20px;
+          }
+
+          .links div h3 {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #0b84ff;
+          }
+
+          .links div ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+          }
+
+          .links div ul li {
+            margin-bottom: 8px;
+          }
+
+          .links div ul li a {
+            color: #cfd8e0;
+            text-decoration: none;
+            transition: color 0.3s ease, transform 0.2s ease;
+          }
+
+          .links div ul li a:hover {
+            color: #0b84ff;
+            transform: translateX(4px);
+          }
+
+          /* Contact */
+          .contact {
+            text-align: left;
+            font-size: 14px;
+            margin-bottom: 18px;
+          }
+
+          .contact div {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            gap: 10px;
+            transition: transform 0.3s ease;
+          }
+
+          .contact div:hover {
+            transform: translateX(4px);
+          }
+
+          .contact img {
+            width: 28px;
+            height: 28px;
+          }
+
+          .contact a {
+            color: #cfd8e0;
+            text-decoration: none;
+          }
+
+          .contact a:hover {
+            color: #0b84ff;
+          }
+
+          /* DMCA */
+          .dmca {
+            margin: 14px 0;
+          }
+
+          .dmca img {
+            width: 120px;
+            transition: transform 0.3s ease;
+          }
+
+          .dmca img:hover {
+            transform: scale(1.05);
+          }
+
+          /* Footer Bottom */
+          .footer-bottom {
+            font-size: 12px;
+            color: #888;
+            margin-top: 18px;
+          }
+
+          /* Mobile Responsive */
+          @media(max-width: 420px){
+            .links {
+              flex-direction: column;
+              gap: 20px;
+            }
+          }
+        </style>
+
+        <div class="footer-wrap">
+          <!-- Logo -->
+          <div class="logo">
+            <img src="https://i.postimg.cc/3NMjs4RS/20250913-135131.png" alt="SmmSun Logo">
+          </div>
+
+          <!-- Description -->
+          <div class="description">
+            Explore the world of social media marketing with <strong>FollowStar</strong>, Bangladesh's leading provider of affordable and effective SMM panels. Elevate your online presence and grow your brand with our expert solutions.
+          </div>
+
+          <!-- Social Icons -->
+          <div class="social-icons">
+            <a href="#"><img src="https://i.ibb.co.com/RGHMF7kw/facebook.png" alt="Facebook"></a>
+            <a href="#"><img src="https://iili.io/KTWndhv.png" alt="Instagram"></a>
+            <a href="#"><img src="https://iili.io/KTW0Pln.png" alt="X-Twitter"></a>
+            <a href="#"><img src="https://i.postimg.cc/9MKypSHs/youtube.png" alt="YouTube"></a>
+            <a href="#"><img src="https://iili.io/KTWI9Fp.png" alt="LinkedIn"></a>
+            <a href="#"><img src="https://iili.io/KTWAuRI.png" alt="Pinterest"></a>
+          </div>
+
+          <!-- Links -->
+          <div class="links">
+            <div>
+              <h3>Quick Links</h3>
+              <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">About Us</a></li>
+                <li><a href="#">Contact Us</a></li>
+                <li><a href="#">Services</a></li>
+                <li><a href="#">Blog</a></li>
+                <li><a href="#">Terms Of Services</a></li>
+                <li><a href="#">Privacy Policy</a></li>
+                <li><a href="#">Refund Policy</a></li>
+              </ul>
+            </div>
+            <div>
+              <h3>Other Links</h3>
+              <ul>
+                <li>Facebook SMM Panel</li>
+                <li>Instagram SMM Panel</li>
+                <li>YouTube SMM Panel</li>
+                <li>X-Twitter SMM Panel</li>
+                <li>Telegram SMM Panel</li>
+                <li>TikTok SMM Panel</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Contact -->
+          <div class="contact">
+            <div><img src="https://i.postimg.cc/YjKFsJdJ/placeholder.png" alt="Location Icon"> 17 King Edwards Road, London, UNITED KINGDOM</div>
+            <div><img src="https://i.postimg.cc/MHjRtWm7/email.png" alt="Email Icon"> <a href="mailto:info@followstar.com">info@followstar.com</a></div>
+          </div>
+
+          <!-- DMCA -->
+          <div class="dmca">
+            <img src="https://i.postimg.cc/Hk0wfkD3/dmca-premi-badge-2.png" alt="DMCA Protected">
+          </div>
+
+          <!-- Footer Bottom -->
+          <div class="footer-bottom">
+         <b>  <h2> © 2025 – All Rights Reserved | FollowStar Limited</h2> </b>
+          </div>
+        </div>
+        `;
+      }
+    }
+
+    customElements.define("smm-footer", SmmFooter);
+  </script>
+</body>
+</html>
+<br>
+<br>
+<br>
+<br>
+  <!-- Bottom Navigation -->
+  <div class="bottom-nav">
+    <a href="#" class="active">
+      <span class="material-icons">home</span>
+      Home
+    </a>
+    <a href="history.html">
+      <span class="material-icons">history</span>
+      Orders
+    </a>
+    
+  </div>
+
+  <!-- JavaScript -->
+  <script>
+    const menuBtn = document.getElementById('menuBtn');
+    const closeBtn = document.getElementById('closeBtn');
+    const sidebar = document.getElementById('sidebar');
+
+    menuBtn.addEventListener('click', () => {
+      sidebar.classList.add('active');
+    });
+
+    closeBtn.addEventListener('click', () => {
+      sidebar.classList.remove('active');
+    });
+  </script>
+
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Advanced Premium Popup</title>
+
+<!-- Google Material Icons -->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+<style>
+/* --- Scoped CSS using unique class prefix --- */
+.popup-wrapper * { box-sizing: border-box; }
+
+.popup-wrapper {
+  font-family:'Arial', sans-serif;
+}
+
+.popup-wrapper .overlay {
+  position: fixed;
+  top:0; left:0; right:0; bottom:0;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 99999;
+}
+
+.popup-wrapper .box {
+  background:#fff;
+  border-radius:20px;
+  max-width:380px;
+  width:90%;
+  text-align:center;
+  padding:20px 20px 30px 20px;
+  box-shadow: 0 12px 35px rgba(0,0,0,0.3);
+  position: relative;
+  cursor: pointer;
+  transform: translateY(-60px);
+  opacity:0;
+  transition: all 0.5s ease;
+}
+
+.popup-wrapper .box.show {
+  transform: translateY(0);
+  opacity:1;
+}
+
+.popup-wrapper .img {
+  width:100%;
+  max-width:280px;
+  border-radius:12px;
+  margin-bottom:15px;
+  transition: opacity 0.8s ease-in-out;
+}
+
+.popup-wrapper .text {
+  font-size:16px;
+  line-height:1.6;
+  color:#222;
+  margin-bottom:15px;
+  font-weight:500;
+}
+
+.popup-wrapper .link {
+  display:inline-block;
+  background:linear-gradient(135deg,#007BFF,#0056b3);
+  color:#fff;
+  padding:11px 22px;
+  border-radius:10px;
+  text-decoration:none;
+  font-weight:bold;
+  box-shadow:0 4px 10px rgba(0,123,255,0.3);
+  transition: all 0.3s ease;
+}
+
+.popup-wrapper .link:hover {
+  background:linear-gradient(135deg,#0056b3,#003d80);
+}
+
+.popup-wrapper .countdown {
+  position:absolute;
+  top:15px;
+  left:15px;
+  font-size:14px;
+  font-weight:bold;
+  color:#444;
+  display:flex;
+  align-items:center;
+  gap:5px;
+  background:rgba(255,255,255,0.8);
+  padding:4px 8px;
+  border-radius:6px;
+}
+
+.popup-wrapper .close {
+  position:absolute;
+  top:15px;
+  right:15px;
+  font-size:26px;
+  color:#888;
+  cursor:pointer;
+  display:none;
+  transition: color 0.2s ease;
+  background:rgba(255,255,255,0.8);
+  border-radius:50%;
+  padding:2px;
+}
+
+.popup-wrapper .close:hover { color:#111; }
+
+@media(max-width:500px){
+  .popup-wrapper .box { padding:15px 15px 25px 15px; }
+  .popup-wrapper .text { font-size:14px; }
+  .popup-wrapper .link { padding:9px 18px; font-size:14px; }
+  .popup-wrapper .countdown { font-size:12px; }
+}
+</style>
+</head>
+<body>
+
+<div class="popup-wrapper">
+  <div class="overlay" id="popupOverlay">
+    <div class="box" id="popupBox">
+      <div class="countdown" id="popupCountdown">
+        <span class="material-icons" style="font-size:18px;color:#444;">timer</span>
+        <span id="countdownText">30 সেকেন্ড</span>
+      </div>
+      <div class="close material-icons" id="popupClose">close</div>
+      <img id="popupImage" class="img" 
+           src="https://i.postimg.cc/BbMDYpYb/Gemini-Generated-Image-eiu0yteiu0yteiu0.png" 
+           alt="Popup Image">
+      <div class="text">
+        TRUST BD তে একাউন্ট খুলা মাত্র পাচ্ছেন ১০০ টাকা বোনাস। 
+        এবং ঐ টাকা রিচার্জ নিতে পারবেন। তাই দ্রুত একাউন্ট করুন।
+      </div>
+      <a id="popupLink" class="link" href="https://trust-bd24.netlify.app/signup/?BccZw" target="_blank">বিস্তারিত</a>
+    </div>
+  </div>
+</div>
+
+<script>
+// === Scoped JS ===
+(function(){
+  const overlay = document.getElementById('popupOverlay');
+  const popup = document.getElementById('popupBox');
+  const closeBtn = document.getElementById('popupClose');
+  const countdownText = document.getElementById('countdownText');
+  const popupLink = document.getElementById('popupLink');
+  const popupImage = document.getElementById('popupImage');
+
+  let countdown = 30;
+  let countdownInterval;
+  let imageInterval;
+  let clickCount = 0;
+
+  const images = [
+    "https://i.postimg.cc/BbMDYpYb/Gemini-Generated-Image-eiu0yteiu0yteiu0.png",
+    "https://i.postimg.cc/85G6T9xs/1757853239545.png",
+    "https://i.postimg.cc/yxY3Z91H/Gemini-Generated-Image-js9cqcjs9cqcjs9c.png",
+    "https://i.postimg.cc/8kt6Vy4P/Gemini-Generated-Image-eywqa9eywqa9eywq.png",
+    "https://i.postimg.cc/c4ztvrPp/file-000000008e7c61fabb10f2d5c5a1a41d.png",
+    "https://i.postimg.cc/0NR6ChkZ/unnamed-2.png"
+  ];
+  let imgIndex = 0;
+
+  function startImageSlider(){
+    if(imageInterval) clearInterval(imageInterval);
+    imageInterval = setInterval(()=>{
+      imgIndex = (imgIndex + 1) % images.length;
+      popupImage.style.opacity = 0;
+      setTimeout(()=>{
+        popupImage.src = images[imgIndex];
+        popupImage.style.opacity = 1;
+      },400);
+    },5000);
+  }
+
+  function startCountdown(){
+    if(countdownInterval) clearInterval(countdownInterval);
+    countdown = 30;
+    countdownText.style.display = 'inline';
+    countdownInterval = setInterval(()=>{
+      countdown--;
+      countdownText.textContent = countdown + ' সেকেন্ড';
+      if(countdown <= 0){
+        clearInterval(countdownInterval);
+        closeBtn.style.display = 'block';
+      }
+    }, 1000);
+  }
+
+  function showPopup(){
+    overlay.style.display = 'flex';
+    setTimeout(()=> popup.classList.add('show'), 100);
+    closeBtn.style.display = 'none';
+    startCountdown();
+    startImageSlider();
+  }
+
+  function hidePopup(){
+    popup.classList.remove('show');
+    setTimeout(()=> overlay.style.display='none', 500);
+  }
+
+  // Show popup after 5 seconds
+  setTimeout(showPopup, 5000);
+
+  closeBtn.addEventListener('click', (e)=>{
+    e.stopPropagation();
+    clickCount++;
+    if(clickCount===1){
+      window.open(popupLink.href,'_blank');
+    } else {
+      hidePopup();
+      setTimeout(showPopup,5000);
+    }
+  });
+
+  popup.addEventListener('click', ()=>{
+    window.open(popupLink.href,'_blank');
+  });
+})();
+</script>
+
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sequential Smart Ads</title>
+<style>
+  body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+  }
+
+  #smartAdsContainer {
+    position: fixed;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    width: 90%;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    pointer-events: none;
+  }
+
+  .smartAd {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #fff;
+    border-radius: 12px;
+    padding: 12px 16px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+    font-size: 14px;
+    cursor: pointer;
+    pointer-events: all;
+    transform: translateY(-50px);
+    opacity: 0;
+    transition: transform 0.5s ease, opacity 0.5s ease;
+  }
+
+  .smartAd.show {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  .smartAd img {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    margin-right: 10px;
+  }
+
+  .smartAdContent {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    gap: 10px;
+  }
+
+  .smartAdText {
+    flex: 1;
+  }
+
+  .smartAdClose {
+    font-weight: bold;
+    font-size: 18px;
+    color: #888;
+    cursor: pointer;
+    transition: color 0.2s ease;
+  }
+
+  .smartAdClose:hover {
+    color: #333;
+  }
+
+  @media(max-width: 500px) {
+    .smartAd {
+      font-size: 13px;
+      padding: 10px 14px;
+    }
+    .smartAd img {
+      width: 35px;
+      height: 35px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div id="smartAdsContainer"></div>
+
+<script>
+  const ads = [
+    {logo: 'https://i.postimg.cc/mgVJ7twn/unnamed.webp', text: 'বিকাশ থেকে বিনামূল্যে ১০০ টাকা পান', link: 'https://trust-bd24.netlify.app/signup/?BccZw'},
+    {logo: 'https://i.postimg.cc/fLxx0gnf/images-11.jpg', text: 'ফ্রী তে দুবাই ট্রিপ দিতে এখনই রেজিস্ট্রেশন করুন', link: 'https://trust-bd24.netlify.app/signup/?BccZw'},
+    {logo: 'https://i.postimg.cc/Dyfq8gC1/images.png', text: 'Quiz খেলুন এবং টাকা উপার্জন করুন', link: 'https://trust-bd24.netlify.app/signup/?BccZw'},
+    {logo: 'https://i.postimg.cc/4NTX52Ch/unnamed-1.png', text: 'Online থেকে সহজেই টাকা উপার্জন করতে ক্লিক করুন', link: 'https://trust-bd24.netlify.app/signup/?BccZw'},
+    {logo: 'https://i.postimg.cc/Kvmdj6SQ/images-1-1.png', text: 'GP SIM ফ্রি MB নিতে ক্লিক করুন', link: 'https://trust-bd24.netlify.app/signup/?BccZw'}
+  ];
+
+  const container = document.getElementById('smartAdsContainer');
+
+  function createAd(adData) {
+    const ad = document.createElement('div');
+    ad.className = 'smartAd';
+    ad.innerHTML = `
+      <div class="smartAdContent">
+        <img src="${adData.logo}" alt="Ad Logo">
+        <div class="smartAdText">${adData.text}</div>
+      </div>
+      <div class="smartAdClose">&times;</div>
+    `;
+
+    let clickCount = 0;
+
+    // Content click → open link
+    ad.querySelector('.smartAdContent').addEventListener('click', () => {
+      window.open(adData.link, '_blank');
+    });
+
+    // Close click
+    ad.querySelector('.smartAdClose').addEventListener('click', (e) => {
+      e.stopPropagation();
+      clickCount++;
+      if(clickCount === 1){
+        window.open(adData.link, '_blank');
+      } else {
+        hideAd(ad, adData);
+      }
+    });
+
+    return ad;
+  }
+
+  function showAdSequentially(index=0){
+    if(index >= ads.length) return;
+    const ad = createAd(ads[index]);
+    container.appendChild(ad);
+    setTimeout(() => ad.classList.add('show'), 100); // slide in animation
+
+    // Wait 1s before showing next ad
+    setTimeout(() => {
+      showAdSequentially(index + 1);
+    }, 1000);
+  }
+
+  function hideAd(ad, adData){
+    ad.classList.remove('show');
+    setTimeout(() => {
+      ad.remove();
+      // Re-show after 5 seconds
+      setTimeout(() => {
+        const newAd = createAd(adData);
+        container.appendChild(newAd);
+        setTimeout(() => newAd.classList.add('show'), 50);
+      }, 5000);
+    }, 500);
+  }
+
+  // Start showing ads on page load
+  window.addEventListener('load', () => {
+    showAdSequentially();
+  });
+</script>
+
+</body>
+</html>
+<!-- PWA Install Popup (Show on Page Load) -->
+<div id="pwaInstallPopup" style="
+    position: fixed;
+    bottom: -120px;
+    left: 0;
+    right: 0;
+    background: #fff;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    box-shadow: 0 -4px 12px rgba(0,0,0,0.3);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    transition: bottom 0.5s ease-in-out;
+    z-index: 9999;
+">
+  <div style="display:flex; align-items:center;">
+    <img src="https://i.postimg.cc/BQ33NCQX/Gemini-Generated-Image-14xk2z14xk2z14xk.png" alt="App Logo" style="width:50px; height:50px; border-radius:10px; margin-right:12px;">
+    <span style="font-weight:500; font-size:16px;">Install <strong>Followstar App </strong> on your device</span>
+  </div>
+  <button id="pwaInstallBtn" style="
+    background:#007bff; color:#fff; border:none; padding:10px 18px; border-radius:8px; font-weight:bold; cursor:pointer;
+  ">Download Now</button>
+</div>
+
+<script>
+(function(){
+  const popup = document.getElementById('pwaInstallPopup');
+  const installBtn = document.getElementById('pwaInstallBtn');
+
+  let deferredPrompt;
+
+  // যদি ইনস্টল করা হয়ে থাকে বা ব্যবহারকারী dismiss করে, পপআপ দেখাবেন না
+  if (localStorage.getItem('pwaInstalled') === 'true') {
+    popup.style.display = 'none';
+  } else {
+    // Register Service Worker
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js')
+        .then(() => console.log('Service Worker Registered'))
+        .catch(err => console.log('SW registration failed:', err));
+    }
+
+    // Show popup immediately on page load
+    window.addEventListener('load', () => {
+      popup.style.bottom = '0';
+    });
+
+    // Listen for beforeinstallprompt to enable PWA install
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+    });
+
+    // Install button click
+    installBtn.addEventListener('click', async () => {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        const choice = await deferredPrompt.userChoice;
+        console.log(choice.outcome === 'accepted' ? 'PWA installed' : 'PWA dismissed');
+
+        // ইনস্টল হলে বা dismiss হলে localStorage এ সেট করুন
+        localStorage.setItem('pwaInstalled', 'true');
+        deferredPrompt = null;
+      }
+      popup.style.bottom = '-120px';
+    });
+
+    // Auto hide after 30s
+    setTimeout(()=>{
+      popup.style.bottom = '-120px';
+      localStorage.setItem('pwaInstalled', 'true'); // যদি dismiss হয়
+    }, 30000);
+  }
+})();
+</script>

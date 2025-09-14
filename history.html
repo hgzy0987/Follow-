@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FollowStar Premium Menu</title>
+
+  <!-- Google Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: #f5f5f5;
+      overflow-x: hidden;
+    }
+
+    /* Fixed Header */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 60px;
+      background: linear-gradient(90deg, #4facfe, #00f2fe);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      z-index: 1000;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    header .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #fff;
+      z-index: 1100;
+    }
+
+    header .logo img {
+      height: 40px;
+      width: 40px;
+      border-radius: 10px;
+      border: 2px solid #fff;
+    }
+
+    header .logo span {
+      font-size: 1.3rem;
+      font-weight: 700;
+    }
+
+    header .menu-icon {
+      font-family: 'Material Icons';
+      font-size: 32px;
+      cursor: pointer;
+      color: #fff;
+      z-index: 1100;
+      transition: transform 0.3s ease;
+    }
+
+    header .menu-icon:hover {
+      transform: rotate(90deg);
+    }
+
+    /* Sidebar Menu */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      right: -280px;
+      width: 280px;
+      height: 100%;
+      background: #fff;
+      box-shadow: -4px 0 20px rgba(0,0,0,0.2);
+      transition: right 0.4s ease;
+      z-index: 1050;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar.active {
+      right: 0;
+    }
+
+    /* Sidebar Header Text */
+    .sidebar-header {
+      width: 100%;
+      height: 120px;
+      background: linear-gradient(90deg, #4facfe, #00f2fe);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .sidebar-header span {
+      color: #fff;
+      font-size: 1.8rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .sidebar .close-icon {
+      font-family: 'Material Icons';
+      font-size: 28px;
+      cursor: pointer;
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      color: #fff;
+      z-index: 1100;
+      transition: color 0.3s ease;
+    }
+
+    .sidebar .close-icon:hover {
+      color: #ff4b5c;
+    }
+
+    /* Menu List with Icons */
+    .sidebar ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      padding: 20px 0;
+    }
+
+    .sidebar ul li a {
+      text-decoration: none;
+      color: #333;
+      font-size: 1.05rem;
+      font-weight: 500;
+      padding: 12px 16px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+
+    .sidebar ul li a:hover {
+      background: linear-gradient(90deg, #4facfe, #00f2fe);
+      color: #fff;
+      padding-left: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .sidebar ul li a .material-icons {
+      font-size: 26px;
+      color: #4facfe;
+      transition: color 0.3s ease;
+    }
+
+    .sidebar ul li a:hover .material-icons {
+      color: #fff;
+    }
+
+    /* Banner Image */
+    .banner {
+      margin-top: 60px; /* header height */
+      width: 100%;
+      height: 280px;
+      background: url('https://i.postimg.cc/HkZks9JZ/24070618-na-january-04.jpg') no-repeat center center/cover;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+    }
+
+    .banner::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 80px;
+      background: linear-gradient(to top, rgba(0,0,0,0.3), transparent);
+    }
+
+    /* Bottom Navigation */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: #ffffff;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 12px 0;
+      box-shadow: 0 -4px 12px rgba(0,0,0,0.1);
+      z-index: 1000;
+      border-top-left-radius: 12px;
+      border-top-right-radius: 12px;
+    }
+
+    .bottom-nav a {
+      text-decoration: none;
+      color: #333;
+      font-size: 0.9rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+
+    .bottom-nav a .material-icons {
+      font-size: 28px;
+      transition: transform 0.3s ease, color 0.3s ease;
+    }
+
+    .bottom-nav a:hover,
+    .bottom-nav a.active {
+      color: #4facfe;
+    }
+
+    .bottom-nav a:hover .material-icons,
+    .bottom-nav a.active .material-icons {
+      transform: scale(1.2);
+      color: #4facfe;
+    }
+
+    /* Responsive */
+    @media(max-width: 768px){
+      .banner {
+        height: 200px;
+      }
+      header .logo span {
+        font-size: 1.1rem;
+      }
+      .sidebar {
+        width: 220px;
+      }
+      .bottom-nav a .material-icons {
+        font-size: 24px;
+      }
+    }
+
+    @media(max-width: 480px){
+      .banner {
+        height: 180px;
+      }
+      .bottom-nav a {
+        font-size: 0.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="logo">
+      <img src="https://i.postimg.cc/Cxv6SPsQ/20250913-121406.png" alt="Logo">
+      <span>FollowStar</span>
+    </div>
+    <span class="material-icons menu-icon" id="menuBtn">menu</span>
+  </header>
+
+  <!-- Sidebar Menu -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <span>FollowStar</span>
+      <span class="material-icons close-icon" id="closeBtn">close</span>
+    </div>
+    <ul>
+       <li><a href="dashboard.html"><span class="material-icons">home</span>Home</a></li>
+      <li><a href="history.html"><span class="material-icons">history</span>Order History</a></li>
+      <li><a href="policy.html"><span class="material-icons">policy</span>Privacy Policy</a></li>
+  
+      <li><a href="service.html"><span class="material-icons">chat</span>Customer Service</a></li>
+    </ul>
+  </div>
+
+  <!-- Banner Image -->
+  <div class="banner"></div>
+
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Facebook Reaction Orders</title>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+
+<!-- Google Fonts & Material Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+
+<!-- Styles -->
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Roboto',sans-serif;}
+body{background: linear-gradient(135deg,#e0eafc,#cfdef3); min-height:100vh;}
+#app{width:95%;max-width:480px;margin:20px auto;padding:10px;}
+
+h2{
+  text-align:center;
+  color:#1e88e5;
+  margin-bottom:25px;
+  font-size:1.8rem;
+  letter-spacing:1px;
+  text-shadow:0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Order Cards */
+.order-card{
+  background: linear-gradient(145deg,#ffffff,#f1f5f9);
+  border-radius:18px;
+  box-shadow:0 12px 30px rgba(0,0,0,0.12);
+  margin-bottom:20px;
+  padding:20px 25px;
+  transition:0.4s;
+  position:relative;
+  border-left: 5px solid #1e88e5;
+}
+.order-card:hover{
+  transform: translateY(-5px);
+  box-shadow:0 20px 35px rgba(0,0,0,0.18);
+}
+.order-card .order-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:12px;
+}
+.order-card .order-header h4{
+  margin:0;
+  font-size:1.1rem;
+  color:#1e88e5;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.order-card .order-header h4::before{
+  content:"\e87c";
+  font-family: 'Material Symbols Outlined';
+  font-size:1.2rem;
+  color:#1e88e5;
+}
+.order-card .order-header .status{
+  padding:6px 12px;
+  border-radius:20px;
+  font-size:0.85rem;
+  font-weight:700;
+  color:#fff;
+  text-transform:uppercase;
+  letter-spacing:0.5px;
+  box-shadow:0 3px 8px rgba(0,0,0,0.1);
+}
+.status.Pending{background: #ffb300;}
+.status.Complete{background: #43a047;}
+.status.Rejected{background: #e53935;}
+
+.order-card .order-body{
+  font-size:0.95rem;
+  color:#333;
+  line-height:1.5;
+}
+.order-card .order-body p{
+  margin:6px 0;
+}
+.order-card small{
+  display:block;
+  margin-top:8px;
+  font-size:0.78rem;
+  color:#777;
+  font-style:italic;
+}
+.order-card .reactions span{
+  display:inline-block;
+  margin-right:8px;
+  font-size:1.3rem;
+  transition:0.3s;
+}
+.order-card .reactions span:hover{
+  transform: scale(1.3);
+}
+
+/* Error */
+#errorMsg{
+  text-align:center;
+  color:#e53935;
+  margin:15px 0;
+  font-weight:500;
+  display:none;
+  background:#ffebee;
+  padding:8px 12px;
+  border-radius:8px;
+  box-shadow:0 3px 8px rgba(0,0,0,0.08);
+  animation: fadeIn 0.4s ease;
+}
+
+/* Animations */
+@keyframes fadeIn{
+  from {opacity:0;}
+  to {opacity:1;}
+}
+</style>
+</head>
+<body>
+
+<div id="app">
+  <h2>Your Facebook Reaction Orders</h2>
+  <div id="errorMsg"></div>
+  <div id="orderHistory">Loading your orders...</div>
+</div>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyCDU_VUP4hrpjjuDphbBekJ51L4MP9q3SA",
+  authDomain: "smm-bd.firebaseapp.com",
+  projectId: "smm-bd",
+  storageBucket: "smm-bd.firebasestorage.app",
+  messagingSenderId: "385535588432",
+  appId: "1:385535588432:web:b80b3c99faa4dab7d77955",
+  measurementId: "G-148KKD2TB5"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+const auth = firebase.auth();
+
+const orderHistoryDiv = document.getElementById('orderHistory');
+const errorMsg = document.getElementById('errorMsg');
+
+function showError(msg){
+  errorMsg.textContent = msg;
+  errorMsg.style.display='block';
+  setTimeout(()=>errorMsg.style.display='none',4000);
+}
+
+// ===== Load Orders =====
+auth.onAuthStateChanged(user=>{
+  if(!user){
+    orderHistoryDiv.innerHTML = 'Please login first.';
+    return;
+  }
+
+  db.collection('orders').doc(user.uid)
+    .onSnapshot(doc=>{
+      if(doc.exists){
+        const data = doc.data();
+        renderOrderCard(data);
+      } else {
+        orderHistoryDiv.innerHTML = 'No orders yet.';
+      }
+    }, err=>{
+      showError('Error loading orders: '+err.message);
+    });
+});
+
+// ===== Render Order Card =====
+function renderOrderCard(data){
+  const reactionsIcons = data.reactions.map(r=>{
+    let icon = '';
+    switch(r){
+      case 'Love': icon = '❤️'; break;
+      case 'Haha': icon = '😂'; break;
+      case 'Care': icon = '🤗'; break;
+      case 'Wow': icon = '😮'; break;
+      case 'Like': icon = '👍'; break;
+      case 'Angry': icon = '😡'; break;
+      default: icon=r;
+    }
+    return `<span>${icon}</span>`;
+  }).join('');
+
+  orderHistoryDiv.innerHTML = `
+    <div class="order-card">
+      <div class="order-header">
+        <h4>${data.service.toUpperCase()}</h4>
+        <div class="status ${data.status}">${data.status}</div>
+      </div>
+      <div class="order-body">
+        <p><strong>Post Link:</strong> <a href="${data.postLink}" target="_blank" style="color:#1e88e5;text-decoration:underline;">${data.postLink}</a></p>
+        <p><strong>Quantity:</strong> ${data.quantity}</p>
+        <p class="reactions"><strong>Reactions:</strong> ${reactionsIcons}</p>
+        <small>${data.timestamp ? data.timestamp.toDate().toLocaleString() : ''}</small>
+      </div>
+    </div>
+  `;
+}
+</script>
+</body>
+</html>
+
+  <!-- Bottom Navigation -->
+  <div class="bottom-nav">
+  <a href="dashboard.html">
+  <span class="material-icons">home</span>
+  Home
+  </a>
+  
+  <a href="#" class="active">
+  <span class="material-icons">history</span>
+  Orders
+  </a>
+  
+  </div>
+  
+  <!-- JavaScript -->
+  <script>
+  const menuBtn = document.getElementById('menuBtn');
+  const closeBtn = document.getElementById('closeBtn');
+  const sidebar = document.getElementById('sidebar');
+  
+  menuBtn.addEventListener('click', () => {
+  sidebar.classList.add('active');
+  });
+  
+  closeBtn.addEventListener('click', () => {
+  sidebar.classList.remove('active');
+  });
+  </script>
+  
+  </body>
+  </html>
+  
