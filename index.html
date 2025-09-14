@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Premium SMM Panel - Sign Up / Sign In</title>
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Roboto',sans-serif;}
+body{background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);display:flex;justify-content:center;align-items:center;min-height:100vh;padding:10px;color:#fff;}
+.container{background:#1a1a1a;border-radius:20px;box-shadow:0 20px 50px rgba(0,0,0,0.5);max-width:400px;width:100%;overflow:hidden;transition:0.3s ease;}
+.banner{width:100%;height:180px;background:url('https://i.postimg.cc/HLwthrKt/20250913-110434.jpg') center/cover no-repeat;}
+.form-container{padding:30px 25px;}
+h2{text-align:center;margin-bottom:25px;color:#fff;font-weight:700;font-size:26px;}
+.input-group{margin-bottom:18px;position:relative;transition:0.3s;}
+.input-group input{width:100%;padding:14px 14px;border-radius:12px;border:1px solid #444;background:#222;color:#fff;font-size:16px;outline:none;transition:0.3s;}
+.input-group input::placeholder{color:#bbb;}
+.input-group input:focus{border-color:#4CAF50;box-shadow:0 0 12px rgba(76,175,80,0.5);}
+.input-group.error input{border-color:#e53935;}
+.input-group.success input{border-color:#4CAF50;}
+.input-group .error-message{color:#e53935;font-size:12px;margin-top:4px;display:none;}
+.checkbox-group{display:flex;align-items:center;margin-bottom:20px;font-size:14px;color:#bbb;}
+.checkbox-group input{margin-right:10px;width:18px;height:18px;}
+.checkbox-group label{color:#bbb;}
+button{width:100%;padding:14px;border:none;border-radius:12px;font-size:16px;font-weight:500;cursor:pointer;transition:0.3s;margin-bottom:12px;}
+.signup-btn{background:#4CAF50;color:#fff;}
+.signup-btn:hover{background:#43a047;}
+.signin-btn{background:#1E88E5;color:#fff;}
+.signin-btn:hover{background:#1565C0;}
+.google-btn{background:#fff;color:#000;display:flex;justify-content:center;align-items:center;border-radius:12px;}
+.google-btn:hover{background:#f0f0f0;}
+.google-btn img{height:24px;width:24px;margin-right:10px;}
+.signin-link{text-align:center;font-size:13px;color:#bbb;margin-top:6px;}
+.signin-link a{color:#4CAF50;text-decoration:none;margin-left:5px;font-size:13px;}
+@media screen and (max-width:450px){.container{max-width:100%;}}
+</style>
+</head>
+<body>
+
+<!-- Sign Up -->
+<div class="container" id="signupContainer">
+  <div class="banner"></div>
+  <div class="form-container">
+    <h2>SMM Panel Sign Up</h2>
+
+    <div class="input-group" id="emailGroup">
+      <input type="email" id="email" placeholder="ইমেইল (@gmail.com only)">
+      <div class="error-message" id="emailError">Invalid Gmail address</div>
+    </div>
+
+    <div class="input-group" id="phoneGroup">
+      <input type="text" id="phone" placeholder="ফোন নাম্বার">
+      <div class="error-message" id="phoneError">Phone number required</div>
+    </div>
+
+    <div class="input-group" id="passwordGroup">
+      <input type="password" id="password" placeholder="পাসওয়ার্ড">
+      <div class="error-message" id="passwordError">Password required (min 6 chars)</div>
+    </div>
+
+    <div class="input-group" id="confirmGroup">
+      <input type="password" id="confirmPassword" placeholder="কনফার্ম পাসওয়ার্ড">
+      <div class="error-message" id="confirmError">Passwords do not match</div>
+    </div>
+
+    <div class="checkbox-group" id="policyGroup">
+      <input type="checkbox" id="policy">
+      <label for="policy">I agree to the Policy</label>
+      <div class="error-message" id="policyError">You must accept the policy</div>
+    </div>
+
+    <button class="signup-btn" onclick="signup()">Sign Up</button>
+    <button class="google-btn" onclick="googleSignIn()">
+      <img src="https://i.postimg.cc/R08Nwmvx/google.png" alt="Google"> Google Sign Up
+    </button>
+
+    <div class="signin-link">
+      Already have an account? <a href="#" onclick="showSignIn()">Sign In</a>
+    </div>
+  </div>
+</div>
+
+<!-- Sign In -->
+<div class="container" id="signinContainer" style="display:none; margin-top:20px;">
+  <div class="banner"></div>
+  <div class="form-container">
+    <h2>SMM Panel Sign In</h2>
+
+    <div class="input-group" id="signinEmailGroup">
+      <input type="email" id="signinEmail" placeholder="ইমেইল (@gmail.com only)">
+      <div class="error-message" id="signinEmailError">Invalid Gmail address</div>
+    </div>
+
+    <div class="input-group" id="signinPasswordGroup">
+      <input type="password" id="signinPassword" placeholder="পাসওয়ার্ড">
+      <div class="error-message" id="signinPasswordError">Password required</div>
+    </div>
+
+    <button class="signin-btn" onclick="signin()">Sign In</button>
+    <button class="google-btn" onclick="googleSignIn()">
+      <img src="https://i.postimg.cc/R08Nwmvx/google.png" alt="Google"> Google Sign In
+    </button>
+
+    <div class="signin-link">
+      <a href="#" onclick="forgetPassword()">Forgot Password?</a>
+    </div>
+
+    <div class="signin-link">
+      <a href="#" onclick="showSignUp()">Back to Sign Up</a>
+    </div>
+  </div>
+</div>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyCDU_VUP4hrpjjuDphbBekJ51L4MP9q3SA",
+  authDomain: "smm-bd.firebaseapp.com",
+  projectId: "smm-bd",
+  storageBucket: "smm-bd.appspot.com",
+  messagingSenderId: "385535588432",
+  appId: "1:385535588432:web:b80b3c99faa4dab7d77955",
+  measurementId: "G-148KKD2TB5"
+};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+
+// Validation helpers
+function setError(groupId){
+    document.getElementById(groupId).classList.add('error');
+    document.querySelector('#'+groupId+' .error-message').style.display='block';
+}
+function setSuccess(groupId){
+    document.getElementById(groupId).classList.remove('error');
+    document.querySelector('#'+groupId+' .error-message').style.display='none';
+}
+
+// Sign Up Validation
+function validateSignUp(){
+    let valid=true;
+    const email=document.getElementById('email').value.trim();
+    const phone=document.getElementById('phone').value.trim();
+    const password=document.getElementById('password').value;
+    const confirmPassword=document.getElementById('confirmPassword').value;
+    const policyChecked=document.getElementById('policy').checked;
+
+    if(!email.endsWith("@gmail.com")){valid=false; setError('emailGroup');} else {setSuccess('emailGroup');}
+    if(phone===""){valid=false; setError('phoneGroup');} else {setSuccess('phoneGroup');}
+    if(password.length<6){valid=false; setError('passwordGroup');} else {setSuccess('passwordGroup');}
+    if(password!==confirmPassword){valid=false; setError('confirmGroup');} else {setSuccess('confirmGroup');}
+    if(!policyChecked){valid=false; setError('policyGroup');} else {setSuccess('policyGroup');}
+    return valid;
+}
+
+// Sign Up
+function signup(){
+    if(!validateSignUp()) return;
+    const email=document.getElementById('email').value.trim();
+    const password=document.getElementById('password').value;
+
+    auth.createUserWithEmailAndPassword(email,password)
+      .then(userCredential=>{
+        userCredential.user.sendEmailVerification()
+          .then(()=>{
+            alert("Verification email sent! Please check your inbox.");
+            window.location.href="dashboard.html";
+          });
+      })
+      .catch(error=>{
+        alert(error.message);
+      });
+}
+
+// Sign In
+function signin(){
+    let valid=true;
+    const email=document.getElementById('signinEmail').value.trim();
+    const password=document.getElementById('signinPassword').value;
+    if(!email.endsWith("@gmail.com")){valid=false; setError('signinEmailGroup');} else {setSuccess('signinEmailGroup');}
+    if(password===""){valid=false; setError('signinPasswordGroup');} else {setSuccess('signinPasswordGroup');}
+    if(!valid) return;
+
+    auth.signInWithEmailAndPassword(email,password)
+      .then(userCredential=>{
+        if(!userCredential.user.emailVerified){
+          alert("Please verify your email first!");
+          auth.signOut();
+          return;
+        }
+        window.location.href="dashboard.html";
+      })
+      .catch(error=>{
+        alert(error.message);
+      });
+}
+
+// Google Sign In
+function googleSignIn(){
+    const provider=new firebase.auth.GoogleAuthProvider();
+    auth.signInWithPopup(provider)
+      .then(()=>{window.location.href="dashboard.html";})
+      .catch(error=>{alert(error.message);});
+}
+
+// Forget Password
+function forgetPassword(){
+    const email = prompt("Enter your @gmail.com email for password reset:");
+    if(email && email.endsWith("@gmail.com")){
+        auth.sendPasswordResetEmail(email)
+            .then(() => {
+                alert("Password reset link sent to your email.");
+            })
+            .catch((error) => {
+                alert("Error: " + error.message);
+            });
+    } else if(email !== null){
+        alert("Please enter a valid @gmail.com email.");
+    }
+}
+
+// Toggle between Sign Up and Sign In
+function showSignIn(){
+    document.getElementById('signupContainer').style.display = 'none';
+    document.getElementById('signinContainer').style.display = 'block';
+}
+function showSignUp(){
+    document.getElementById('signupContainer').style.display = 'block';
+    document.getElementById('signinContainer').style.display = 'none';
+}
+</script>
+</body>
+</html>
