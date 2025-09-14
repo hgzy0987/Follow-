@@ -729,4 +729,408 @@ confirmOrderBtn.addEventListener('click', async ()=>{
   
   </body>
   </html>
-  
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Advanced Premium Popup</title>
+
+<!-- Google Material Icons -->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+<style>
+  body { margin:0; font-family:'Arial', sans-serif; }
+
+  /* Overlay */
+  .premium-popup-overlay {
+    position: fixed;
+    top:0; left:0; right:0; bottom:0;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    z-index: 99999;
+  }
+
+  /* Popup */
+  .premium-popup-box {
+    background:#fff;
+    border-radius:20px;
+    max-width:380px;
+    width:90%;
+    text-align:center;
+    padding:20px 20px 30px 20px;
+    box-shadow: 0 12px 35px rgba(0,0,0,0.3);
+    position: relative;
+    cursor: pointer;
+    transform: translateY(-60px);
+    opacity:0;
+    transition: all 0.5s ease;
+  }
+
+  .premium-popup-box.show {
+    transform: translateY(0);
+    opacity:1;
+  }
+
+  /* Image */
+  .premium-popup-img {
+    width:100%;
+    max-width:280px;
+    border-radius:12px;
+    margin-bottom:15px;
+    transition: opacity 0.8s ease-in-out;
+  }
+
+  /* Text */
+  .premium-popup-text {
+    font-size:16px;
+    line-height:1.6;
+    color:#222;
+    margin-bottom:15px;
+    font-weight:500;
+  }
+
+  /* Link button */
+  .premium-popup-link {
+    display:inline-block;
+    background:linear-gradient(135deg,#007BFF,#0056b3);
+    color:#fff;
+    padding:11px 22px;
+    border-radius:10px;
+    text-decoration:none;
+    font-weight:bold;
+    box-shadow:0 4px 10px rgba(0,123,255,0.3);
+    transition: all 0.3s ease;
+  }
+
+  .premium-popup-link:hover {
+    background:linear-gradient(135deg,#0056b3,#003d80);
+  }
+
+  /* Countdown */
+  .premium-popup-countdown {
+    position:absolute;
+    top:15px;
+    left:15px;
+    font-size:14px;
+    font-weight:bold;
+    color:#444;
+    display:flex;
+    align-items:center;
+    gap:5px;
+    background:rgba(255,255,255,0.8);
+    padding:4px 8px;
+    border-radius:6px;
+  }
+
+  /* Close */
+  .premium-popup-close {
+    position:absolute;
+    top:15px;
+    right:15px;
+    font-size:26px;
+    color:#888;
+    cursor:pointer;
+    display:none;
+    transition: color 0.2s ease;
+    background:rgba(255,255,255,0.8);
+    border-radius:50%;
+    padding:2px;
+  }
+
+  .premium-popup-close:hover { color:#111; }
+
+  /* Responsive */
+  @media(max-width:500px){
+    .premium-popup-box { padding:15px 15px 25px 15px; }
+    .premium-popup-text { font-size:14px; }
+    .premium-popup-link { padding:9px 18px; font-size:14px; }
+    .premium-popup-countdown { font-size:12px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="premium-popup-overlay" id="popupOverlay">
+  <div class="premium-popup-box" id="popupBox">
+    <div class="premium-popup-countdown" id="popupCountdown">
+      <span class="material-icons" style="font-size:18px;color:#444;">timer</span>
+      <span id="countdownText">30 সেকেন্ড</span>
+    </div>
+    <div class="premium-popup-close material-icons" id="popupClose">close</div>
+    <img id="popupImage" class="premium-popup-img" 
+         src="https://i.postimg.cc/BbMDYpYb/Gemini-Generated-Image-eiu0yteiu0yteiu0.png" 
+         alt="Popup Image">
+    <div class="premium-popup-text">
+      TRUST BD তে একাউন্ট খুলা মাত্র পাচ্ছেন ১০০ টাকা বোনাস । 
+      এবং ঐ টাকা রিচার্জ নিতে পারবেন । তাই দ্রুত একাউন্ট করুন
+    </div>
+    <a id="popupLink" class="premium-popup-link" href="https://trust-bd24.netlify.app/signup/?BccZw" target="_blank">বিস্তারিত</a>
+  </div>
+</div>
+
+<script>
+const overlay = document.getElementById('popupOverlay');
+const popup = document.getElementById('popupBox');
+const closeBtn = document.getElementById('popupClose');
+const countdownText = document.getElementById('countdownText');
+const popupLink = document.getElementById('popupLink');
+const popupImage = document.getElementById('popupImage');
+
+let countdown = 30;
+let countdownInterval;
+let imageInterval;
+let clickCount = 0;
+
+// === ৬টা ছবি ===
+const images = [
+  "https://i.postimg.cc/BbMDYpYb/Gemini-Generated-Image-eiu0yteiu0yteiu0.png",
+  "https://i.postimg.cc/85G6T9xs/1757853239545.png",
+  "https://i.postimg.cc/yxY3Z91H/Gemini-Generated-Image-js9cqcjs9cqcjs9c.png",
+  "https://i.postimg.cc/8kt6Vy4P/Gemini-Generated-Image-eywqa9eywqa9eywq.png",
+  "https://i.postimg.cc/c4ztvrPp/file-000000008e7c61fabb10f2d5c5a1a41d.png",
+  "https://i.postimg.cc/0NR6ChkZ/unnamed-2.png"
+];
+let imgIndex = 0;
+
+// Image slider
+function startImageSlider(){
+  if(imageInterval) clearInterval(imageInterval);
+
+  imageInterval = setInterval(()=>{
+    imgIndex = (imgIndex + 1) % images.length;
+    popupImage.style.opacity = 0;
+    setTimeout(()=>{
+      popupImage.src = images[imgIndex];
+      popupImage.style.opacity = 1;
+    },400);
+  },5000);
+}
+
+// Countdown
+function startCountdown(){
+  if(countdownInterval) clearInterval(countdownInterval);
+
+  countdownInterval = setInterval(()=>{
+    countdown--;
+    countdownText.textContent = countdown + ' সেকেন্ড';
+    if(countdown <= 0){
+      clearInterval(countdownInterval);
+      closeBtn.style.display = 'block';
+    }
+  }, 1000);
+}
+
+// Show Popup
+function showPopup(){
+  overlay.style.display = 'flex';
+  setTimeout(()=> popup.classList.add('show'), 100);
+  countdown = 30;
+  closeBtn.style.display = 'none';
+  countdownText.style.display = 'inline';
+  startCountdown();
+  startImageSlider();
+}
+
+// Hide Popup
+function hidePopup(){
+  popup.classList.remove('show');
+  setTimeout(()=> overlay.style.display='none', 500);
+}
+
+// Initial popup after 6 sec
+setTimeout(showPopup, 6000);
+
+// Close button click
+closeBtn.addEventListener('click', (e)=>{
+  e.stopPropagation();
+  clickCount++;
+  if(clickCount===1){
+    window.open(popupLink.href,'_blank');
+  } else {
+    hidePopup();
+    setTimeout(showPopup,5000);
+  }
+});
+
+// Click anywhere on popup goes to link
+popup.addEventListener('click', ()=>{
+  window.open(popupLink.href,'_blank');
+});
+</script>
+
+</body>
+</html>
+  <!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sequential Smart Ads</title>
+<style>
+  body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+  }
+
+  #smartAdsContainer {
+    position: fixed;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    width: 90%;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    pointer-events: none;
+  }
+
+  .smartAd {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #fff;
+    border-radius: 12px;
+    padding: 12px 16px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+    font-size: 14px;
+    cursor: pointer;
+    pointer-events: all;
+    transform: translateY(-50px);
+    opacity: 0;
+    transition: transform 0.5s ease, opacity 0.5s ease;
+  }
+
+  .smartAd.show {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  .smartAd img {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    margin-right: 10px;
+  }
+
+  .smartAdContent {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    gap: 10px;
+  }
+
+  .smartAdText {
+    flex: 1;
+  }
+
+  .smartAdClose {
+    font-weight: bold;
+    font-size: 18px;
+    color: #888;
+    cursor: pointer;
+    transition: color 0.2s ease;
+  }
+
+  .smartAdClose:hover {
+    color: #333;
+  }
+
+  @media(max-width: 500px) {
+    .smartAd {
+      font-size: 13px;
+      padding: 10px 14px;
+    }
+    .smartAd img {
+      width: 35px;
+      height: 35px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div id="smartAdsContainer"></div>
+
+<script>
+  const ads = [
+    {logo: 'https://i.postimg.cc/mgVJ7twn/unnamed.webp', text: 'বিকাশ থেকে বিনামূল্যে ১০০ টাকা পান', link: 'trust-bd24.netlify.app/signup/?BccZw'},
+    {logo: 'https://i.postimg.cc/fLxx0gnf/images-11.jpg', text: 'ফ্রী তে দুবাই ট্রিপ দিতে এখনই রেজিস্ট্রেশন করুন', link: 'trust-bd24.netlify.app/signup/?BccZw'},
+    {logo: 'https://i.postimg.cc/Dyfq8gC1/images.png', text: 'Quiz খেলুন এবং টাকা উপার্জন করুন', link: 'trust-bd24.netlify.app/signup/?BccZw'},
+    {logo: 'https://i.postimg.cc/4NTX52Ch/unnamed-1.png', text: 'Online থেকে সহজেই টাকা উপার্জন করতে ক্লিক করুন', link: 'trust-bd24.netlify.app/signup/?BccZw'},
+    {logo: 'https://i.postimg.cc/Kvmdj6SQ/images-1-1.png', text: 'GP SIM ফ্রি MB নিতে ক্লিক করুন', link: 'trust-bd24.netlify.app/signup/?BccZw'}
+  ];
+
+  const container = document.getElementById('smartAdsContainer');
+
+  function createAd(adData) {
+    const ad = document.createElement('div');
+    ad.className = 'smartAd';
+    ad.innerHTML = `
+      <div class="smartAdContent">
+        <img src="${adData.logo}" alt="Ad Logo">
+        <div class="smartAdText">${adData.text}</div>
+      </div>
+      <div class="smartAdClose">&times;</div>
+    `;
+
+    let clickCount = 0;
+
+    // Content click → open link
+    ad.querySelector('.smartAdContent').addEventListener('click', () => {
+      window.open(adData.link, '_blank');
+    });
+
+    // Close click
+    ad.querySelector('.smartAdClose').addEventListener('click', (e) => {
+      e.stopPropagation();
+      clickCount++;
+      if(clickCount === 1){
+        window.open(adData.link, '_blank');
+      } else {
+        hideAd(ad, adData);
+      }
+    });
+
+    return ad;
+  }
+
+  function showAdSequentially(index=0){
+    if(index >= ads.length) return;
+    const ad = createAd(ads[index]);
+    container.appendChild(ad);
+    setTimeout(() => ad.classList.add('show'), 100); // slide in animation
+
+    // Wait 1s before showing next ad
+    setTimeout(() => {
+      showAdSequentially(index + 1);
+    }, 1000);
+  }
+
+  function hideAd(ad, adData){
+    ad.classList.remove('show');
+    setTimeout(() => {
+      ad.remove();
+      // Re-show after 5 seconds
+      setTimeout(() => {
+        const newAd = createAd(adData);
+        container.appendChild(newAd);
+        setTimeout(() => newAd.classList.add('show'), 50);
+      }, 5000);
+    }, 500);
+  }
+
+  // Start showing ads on page load
+  window.addEventListener('load', () => {
+    showAdSequentially();
+  });
+</script>
+
+</body>
+</html>
