@@ -16,8 +16,7 @@
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Roboto',sans-serif;}
 body{background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);display:flex;justify-content:center;align-items:center;min-height:100vh;padding:10px;color:#fff;}
 .container{background:#1a1a1a;border-radius:20px;box-shadow:0 20px 50px rgba(0,0,0,0.5);max-width:400px;width:100%;overflow:hidden;transition:0.3s ease;}
-.banner{width:100%;height:200px;background:url('https://i.postimg.cc/JnY4DHWR/mzrewwpk77ppkwxl.jpg') center/cover no-repeat;position:relative;}
-.banner h3{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);color:#fff;background:rgba(0,0,0,0.6);padding:8px 12px;border-radius:10px;font-size:14px;font-weight:500;text-align:center;}
+.banner{width:100%;height:180px;background:url('https://i.postimg.cc/HLwthrKt/20250913-110434.jpg') center/cover no-repeat;}
 .form-container{padding:30px 25px;}
 h2{text-align:center;margin-bottom:25px;color:#fff;font-weight:700;font-size:26px;}
 .input-group{margin-bottom:18px;position:relative;transition:0.3s;}
@@ -40,85 +39,14 @@ button{width:100%;padding:14px;border:none;border-radius:12px;font-size:16px;fon
 .google-btn img{height:24px;width:24px;margin-right:10px;}
 .signin-link{text-align:center;font-size:13px;color:#bbb;margin-top:6px;}
 .signin-link a{color:#4CAF50;text-decoration:none;margin-left:5px;font-size:13px;}
-
-/* Mobile-style popup modal */
-.modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.7);
-    display: none; /* প্রথমে hide */
-    justify-content: center;
-    align-items: center;
-    z-index: 999;
-}
-
-.modal-content {
-    background: #1a1a1a;
-    padding: 25px 20px;
-    border-radius: 15px;
-    max-width: 350px;
-    width: 90%;
-    position: relative;
-    text-align: center;
-}
-
-.modal-content img {
-    width: 100%;           /* container অনুযায়ী ফিট হবে */
-    max-width: 200px;      /* বড় স্ক্রিনে বেশি বড় হবে না */
-    height: auto;          /* প্রোপোরশন ঠিক থাকবে */
-    margin-bottom: 15px;
-    border-radius: 12px;   /* সুন্দর rounded look */
-    object-fit: cover;     /* ইমেজ crop হলে সুন্দরভাবে ফিট হবে */
-}
-
-.modal-content h3 {
-    margin-bottom: 12px;
-    color: #fff;
-    font-size: 16px;
-    font-weight: 500;
-}
-
-.modal-content p {
-    color: #bbb;
-    font-size: 14px;
-    margin-bottom: 15px;
-    line-height: 1.5;
-}
-
-.modal-content .close-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: #e53935;
-    color: #fff;
-    border: none;
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    cursor: pointer;
-    font-weight: bold;
-    font-size: 16px;
-    line-height: 28px;
-}
-
-/* Responsive adjustments */
-@media screen and (max-width: 450px){
-    .container { max-width: 100%; padding: 15px; }
-    .banner { height: 150px; }
-    .modal-content img { max-width: 150px; margin-bottom: 12px; }
-}
+@media screen and (max-width:450px){.container{max-width:100%;}}
 </style>
 </head>
 <body>
 
 <!-- Sign Up -->
 <div class="container" id="signupContainer">
-  <div class="banner">
-    
-  </div>
+  <div class="banner"></div>
   <div class="form-container">
     <h2>SMM Panel Sign Up</h2>
 
@@ -189,17 +117,6 @@ button{width:100%;padding:14px;border:none;border-radius:12px;font-size:16px;fon
     </div>
   </div>
 </div>
-
-<!-- Popup Modal -->
-<div class="modal" id="verificationModal">
-  <div class="modal-content">
-    <button class="close-btn" onclick="closeModal()">×</button>
-    <img src="https://i.postimg.cc/dVrnt8Kc/20250914-134700.jpg" alt="Verification">
-    <h3>Verification Sent</h3>
-    <p>VERIFICATION MESSAGE টা পেতে আপনার GMAIL এর Spam ফোল্ডার টা CHECK করুন।</p>
-  </div>
-</div>
-
 <script>
 const firebaseConfig = {
   apiKey: "AIzaSyCDU_VUP4hrpjjuDphbBekJ51L4MP9q3SA",
@@ -240,14 +157,6 @@ function validateSignUp(){
     return valid;
 }
 
-// Open Modal
-function showModal(){
-    document.getElementById('verificationModal').style.display='flex';
-}
-function closeModal(){
-    document.getElementById('verificationModal').style.display='none';
-}
-
 // Sign Up
 function signup(){
     if(!validateSignUp()) return;
@@ -255,11 +164,9 @@ function signup(){
     const password=document.getElementById('password').value;
 
     auth.createUserWithEmailAndPassword(email,password)
-      .then(userCredential=>{
-        userCredential.user.sendEmailVerification()
-          .then(()=>{
-            showModal();
-          });
+      .then(()=>{
+        // সরাসরি dashboard.html এ রিডাইরেক্ট
+        window.location.href="dashboard.html";
       })
       .catch(error=>{
         alert(error.message);
@@ -276,12 +183,8 @@ function signin(){
     if(!valid) return;
 
     auth.signInWithEmailAndPassword(email,password)
-      .then(userCredential=>{
-        if(!userCredential.user.emailVerified){
-          alert("Please verify your email first!");
-          auth.signOut();
-          return;
-        }
+      .then(()=>{
+        // সরাসরি dashboard.html এ রিডাইরেক্ট
         window.location.href="dashboard.html";
       })
       .catch(error=>{
@@ -303,7 +206,7 @@ function forgetPassword(){
     if(email && email.endsWith("@gmail.com")){
         auth.sendPasswordResetEmail(email)
             .then(() => {
-                showModal();
+                alert("Password reset link sent to your email.");
             })
             .catch((error) => {
                 alert("Error: " + error.message);
