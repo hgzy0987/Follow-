@@ -652,14 +652,14 @@ submitBtn.addEventListener('click', async ()=>{
   `;
   orderPopup.style.display='flex';
 });
-// ===== Confirm Order =====
+  // ===== Confirm Order =====
 confirmOrderBtn.addEventListener('click', async ()=>{
   const user = auth.currentUser;
   if(!user){ showError('Please login first'); return; }
 
-  const ordersRef = db.collection('orders'); // Collection level
+  const orderRef = db.collection('orders').doc(user.uid); // UID অনুযায়ী document
 
-  ordersRef.add({
+  orderRef.set({
     postLink: postLinkInput.value.trim(),
     service: selectedService,
     reactions: selectedReactions,
